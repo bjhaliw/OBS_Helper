@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
@@ -90,57 +91,12 @@ public class CountdownTab {
 		Label timerSecondsLabel = new Label("Seconds");
 		secondsBox.getChildren().setAll(timerSecondsField, timerSecondsLabel);
 
-		// Start Button
-		Button timerStartButton = new Button("Start Countdown");
-		timerStartButton.setTooltip(new Tooltip("Begin the Countdown"));
-		timerStartButton.setOnAction(e -> {
-
-			if (!this.timer.getIsRunning()) {
-				int hoursInt = 0, minutesInt = 0, secondsInt = 0;
-
-				if (timerHoursField.getText().equals("")) {
-					hoursInt = 0;
-				} else if (timerMinutesField.getText().equals("")) {
-					minutesInt = 0;
-				} else if (timerSecondsField.getText().equals("")) {
-					secondsInt = 0;
-				} else {
-
-					try {
-						hoursInt = Integer.parseInt(timerHoursField.getText());
-						minutesInt = Integer.parseInt(timerMinutesField.getText());
-						secondsInt = Integer.parseInt(timerSecondsField.getText());
-					} catch (NumberFormatException exception) {
-						timerNumbersOnly();
-					}
-				}
-
-				this.timer.setTimer(hoursInt, minutesInt, secondsInt);
-				this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
-			}
-
-		});
-
-		// Pause Button
-		Button timerPauseButton = new Button("Pause Countdown");
-		timerPauseButton.setTooltip(new Tooltip("Pause and Keep Countdown"));
-		timerPauseButton.setOnAction(e -> {
-			this.timer.cancelTimer();
-		});
-
-		// Stop Button
-		Button timerStopButton = new Button("Stop Countdown");
-		timerStopButton.setTooltip(new Tooltip("Stop and Reset Countdown"));
-		timerStopButton.setOnAction(e -> {
-			this.timer.cancelTimer();
-			timerHoursField.setText("0");
-			timerMinutesField.setText("0");
-			timerSecondsField.setText("0");
-		});
+		// HBox control = new HBox(10);
+		// control.setAlignment(Pos.CENTER);
+		// control.getChildren().addAll(timerStartButton, timerStopButton);
 
 		timerDetails.getChildren().addAll(hoursBox, minutesBox, secondsBox);
-		timerVBox.getChildren().addAll(timerTitle, timerDetails, createIncDecButtons(), timerStartButton,
-				timerPauseButton, timerStopButton);
+		timerVBox.getChildren().addAll(timerTitle, timerDetails, createButtons());
 
 		countdown.setContent(timerVBox);
 
@@ -148,14 +104,13 @@ public class CountdownTab {
 		return countdown;
 	}
 
-	private VBox createIncDecButtons() {
-		VBox mainBox = new VBox(10);
-		HBox hoursButtonBox = new HBox(10);
-		hoursButtonBox.setAlignment(Pos.CENTER);
-		HBox minutesButtonBox = new HBox(10);
-		minutesButtonBox.setAlignment(Pos.CENTER);
-		HBox secondsButtonBox = new HBox(10);
-		secondsButtonBox.setAlignment(Pos.CENTER);
+	private HBox createButtons() {
+		HBox box = new HBox();
+		box.setAlignment(Pos.CENTER);
+
+		GridPane pane = new GridPane();
+		pane.setHgap(10);
+		pane.setVgap(10);
 
 		Label hourLabel = new Label("Hours");
 		Label minuteLabel = new Label("Minutes");
@@ -165,8 +120,6 @@ public class CountdownTab {
 		Button sm5 = new Button("-5");
 		Button sp5 = new Button("+5");
 		Button sp1 = new Button("+1");
-
-		secondsButtonBox.getChildren().addAll(sm5, sm1, secondLabel, sp1, sp5);
 
 		sm1.setOnAction(e -> {
 			int value = -1;
@@ -189,7 +142,6 @@ public class CountdownTab {
 		Button mm5 = new Button("-5");
 		Button mp5 = new Button("+5");
 		Button mp1 = new Button("+1");
-		minutesButtonBox.getChildren().addAll(mm5, mm1, minuteLabel, mp1, mp5);
 
 		mm1.setOnAction(e -> {
 			int value = -1;
@@ -212,7 +164,6 @@ public class CountdownTab {
 		Button hm5 = new Button("-5");
 		Button hp5 = new Button("+5");
 		Button hp1 = new Button("+1");
-		hoursButtonBox.getChildren().addAll(hm5, hm1, hourLabel, hp1, hp5);
 
 		hm1.setOnAction(e -> {
 			int value = -1;
@@ -231,45 +182,138 @@ public class CountdownTab {
 			handleButton(value, timerHoursField);
 		});
 
-		mainBox.getChildren().addAll(hoursButtonBox, minutesButtonBox, secondsButtonBox);
-		return mainBox;
+		// Start Button
+		Button timerStartButton = new Button("Start");
+		timerStartButton.setTooltip(new Tooltip("Begin the Countdown"));
+		timerStartButton.setOnAction(e -> {
+
+			if (this.timer.getIsRunning() == false) {
+				int hoursInt = 0, minutesInt = 0, secondsInt = 0;
+
+				if (timerHoursField.getText().equals("")) {
+					hoursInt = 0;
+				} else if (timerMinutesField.getText().equals("")) {
+					minutesInt = 0;
+				} else if (timerSecondsField.getText().equals("")) {
+					secondsInt = 0;
+				} else {
+
+					try {
+						hoursInt = Integer.parseInt(timerHoursField.getText());
+						minutesInt = Integer.parseInt(timerMinutesField.getText());
+						secondsInt = Integer.parseInt(timerSecondsField.getText());
+					} catch (NumberFormatException exception) {
+						timerNumbersOnly();
+					}
+				}
+
+				int value = hoursInt + minutesInt + secondsInt;
+				if (value > 0) {
+					this.timer.setTimer(hoursInt, minutesInt, secondsInt);
+					this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
+					System.out.println(timer.getIsRunning());
+				}
+			}
+		});
+
+		Button timerPauseButton = new Button("Pause");
+		timerPauseButton.setTooltip(new Tooltip("Pause the Countdown"));
+		timerPauseButton.setOnAction(e -> {
+			this.timer.cancelTimer();
+		});
+
+		// Stop Button
+		Button timerStopButton = new Button("Reset");
+		timerStopButton.setTooltip(new Tooltip("Stop and Reset Countdown"));
+		timerStopButton.setOnAction(e -> {
+			this.timer.cancelTimer();
+
+			timerHoursField.setText("00");
+			timerMinutesField.setText("00");
+			timerSecondsField.setText("00");
+
+			try {
+				this.timer.writeToFields("00", "00", "00");
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		});
+
+		pane.add(hm5, 0, 0, 1, 1);
+		pane.add(hm1, 1, 0, 1, 1);
+		pane.add(hourLabel, 2, 0, 2, 1);
+		pane.add(hp1, 4, 0, 1, 1);
+		pane.add(hp5, 5, 0, 1, 1);
+
+		pane.add(mm5, 0, 1, 1, 1);
+		pane.add(mm1, 1, 1, 1, 1);
+		pane.add(minuteLabel, 2, 1, 2, 1);
+		pane.add(mp1, 4, 1, 1, 1);
+		pane.add(mp5, 5, 1, 1, 1);
+
+		pane.add(sm5, 0, 2, 1, 1);
+		pane.add(sm1, 1, 2, 1, 1);
+		pane.add(secondLabel, 2, 2, 2, 1);
+		pane.add(sp1, 4, 2, 1, 1);
+		pane.add(sp5, 5, 2, 1, 1);
+
+		pane.add(timerStartButton, 0, 3, 2, 1);
+		pane.add(timerPauseButton, 2, 3, 2, 1);
+		pane.add(timerStopButton, 4, 3, 2, 1);
+
+	//	timerStartButton.setMaxWidth(Double.MAX_VALUE);
+		//timerPauseButton.setMaxWidth(Double.MAX_VALUE);
+		//timerStopButton.setMaxWidth(Double.MAX_VALUE);
+		
+		GridPane.setFillWidth(timerStartButton, true);
+		GridPane.setFillWidth(timerPauseButton, true);
+		GridPane.setFillWidth(timerStopButton, true);
+		
+		for (int i = 0; i < pane.getChildren().size(); i++) {
+			GridPane.setHalignment(pane.getChildren().get(i), HPos.CENTER);
+			//pane.getChildren().get(i).setStyle("-fx-effect: dropshadow(three-pass-box, rgba(135, 206, 250, 0.3), 10, 0, 0, 0);");
+		}
+		
+		hourLabel.setStyle("");
+		minuteLabel.setStyle("");
+		secondLabel.setStyle("");
+
+		box.getChildren().add(pane);
+
+		return box;
 	}
 
 	private final void handleButton(int value, TextField textfield) {
-		int num = Integer.parseInt(textfield.getText());
-		System.out.println("TextField Value: " + num);
-		num += value;
-		System.out.println("Adding the parameter: " + num);
+		try {
+			int num = Integer.parseInt(textfield.getText());
+			System.out.println("TextField Value: " + num);
+			num += value;
+			System.out.println("Adding the parameter: " + num);
 
-		if (num > 0) {
-			textfield.setText(Integer.toString(num));
-
-			// Start a new timer automatically if timer is running
-			if (this.timer.getIsRunning()) {
-				int h = Integer.parseInt(timerHoursField.getText());
-				int m = Integer.parseInt(timerMinutesField.getText());
-				int s = Integer.parseInt(timerSecondsField.getText());
-				this.timer.cancelTimer();
-				this.timer.setTimer(h, m, s);
-				this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
+			if (num < 0) {
+				textfield.setText("00");
+				System.out.println("Setting text");
 			}
-		}
-	}
 
-	private void useButton(ActionEvent e, ArrayList<Button> buttons) {
-		Button button = (Button) e.getSource();
-		int selectedValue = buttons.indexOf(button);
+			if (num >= 0) {
+				textfield.setText(this.timer.intToString(num));
 
-		switch (selectedValue) {
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
+				// Start a new timer automatically if timer is running
+				if (this.timer.getIsRunning()) {
+					int h = Integer.parseInt(timerHoursField.getText());
+					int m = Integer.parseInt(timerMinutesField.getText());
+					int s = Integer.parseInt(timerSecondsField.getText());
+					this.timer.cancelTimer();
+					this.timer.setTimer(h, m, s);
+					this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
+				}
+			}
+		} catch (NumberFormatException e) {
+			timerNumbersOnly();
 		}
+
 	}
 
 	protected void timerNumbersOnly() {

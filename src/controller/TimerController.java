@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.scene.control.*;
+import javafx.application.Platform;
 
 /**
  * This class creates the controller to keep track of the countdown timer.
@@ -65,12 +66,14 @@ public class TimerController {
 	 * false. Allows the TextFields in GUI class to become editable once more.
 	 */
 	public void cancelTimer() {
+		System.out.println(this.timer.toString());
 		this.timer.cancel();
+		this.timer.purge();
+		System.out.println(this.timer.toString());
 		this.isRunning = false;
 		this.hoursField.setEditable(true);
 		this.minutesField.setEditable(true);
-		this.secondsField.setEditable(true);
-		
+		this.secondsField.setEditable(true);		
 	}
 
 	/**
@@ -86,7 +89,7 @@ public class TimerController {
 	 * @param secondsField
 	 */
 	@SuppressWarnings("restriction")
-	public void runTimer(TextField hoursField, TextField minutesField, TextField secondsField) {
+	public synchronized void runTimer(TextField hoursField, TextField minutesField, TextField secondsField) {
 		int delay = 1000;
 		int period = 1000;
 		
@@ -101,8 +104,10 @@ public class TimerController {
 				public void run() {
 					
 					try {				
+						//System.out.println(isRunning);
 						int hours = 0, minutes = 0, seconds = 0, time = 0;
 						time = setInterval();
+						//System.out.println("Time:" + time);
 
 						// Updating amount of hours left
 						hours = time / 3600;
@@ -120,14 +125,17 @@ public class TimerController {
 						String m = intToString(minutes);
 						String s = intToString(seconds);
 						
-						hoursField.setText(h);
-						minutesField.setText(m);
-						secondsField.setText(s);				
+						Platform.runLater(() -> {
+							hoursField.setText(h);
+							minutesField.setText(m);
+							System.out.println(s);
+							secondsField.setText(s);	
+							System.out.println(secondsField.getText());
+						});
 						
-						// Writing to timer.txt file
-						PrintWriter writer = new PrintWriter(filePath);		
-						writer.println(h + ":" + m + ":" + s);
-						writer.close();
+						//System.out.println("SecondsField inside of run(): " + secondsField.getText());
+						
+						writeToFields(h, m, s);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -136,10 +144,18 @@ public class TimerController {
 			}, delay, period);
 
 		}
-
 	}
 	
-	private String intToString(int value) {
+	public void writeToFields(String h, String m, String s) throws FileNotFoundException {
+		System.out.println("Writing to file");
+		// Writing to timer.txt file
+		PrintWriter writer = new PrintWriter(filePath);		
+		writer.println(h + ":" + m + ":" + s);
+		writer.close();
+	}
+	
+	public String intToString(int value) {
+		System.out.println("Running int into String for value: " + value);
 		String string = Integer.toString(value);
 		
 		if (value < 10) {
@@ -158,6 +174,7 @@ public class TimerController {
 	private final int setInterval() {
 		// Check if at the end of the time
 		if (this.interval == 1) {
+			System.out.println("Canceling timer");
 			cancelTimer();
 		}
 		return --this.interval;
@@ -169,6 +186,7 @@ public class TimerController {
 	 * @return Boolean isRunning instance variable, true if running, false if not.
 	 */
 	public boolean getIsRunning() {
+		System.out.println("Checking isRunning method");
 		return this.isRunning;
 	}
 
@@ -180,6 +198,7 @@ public class TimerController {
 	 * @param seconds Primitive integer representing number of seconds
 	 */
 	public void setTimer(int hours, int minutes, int seconds) {
+		System.out.println("Setting the timer: " + hours + " " + minutes + " " + seconds);
 		seconds += (minutes * 60) + (hours * 3600);
 		this.interval = seconds;
 		timer = new Timer();

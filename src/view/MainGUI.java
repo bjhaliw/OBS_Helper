@@ -56,8 +56,11 @@ public class MainGUI extends Application {
 
 		System.out.println(directoryPath);
 		Scene scene = new Scene(this.pane, sceneWidth, sceneHeight);
+		
+		darkMode = true;
 		this.window.setTitle("Twitch Countdown Controller");
 		this.window.setScene(scene);
+		this.window.getScene().getRoot().setStyle("-fx-base:black");
 		this.window.show();
 
 		// User closes main window
@@ -75,7 +78,7 @@ public class MainGUI extends Application {
 		// Create Menu for File
 		Menu file = new Menu("File");
 		MenuItem save = new MenuItem("Save");
-		MenuItem dark = new MenuItem("Enable Dark Mode");
+		MenuItem dark = new MenuItem("Disable Dark Mode");
 		MenuItem exit = new MenuItem("Exit");
 
 		// Create Menu for Help
