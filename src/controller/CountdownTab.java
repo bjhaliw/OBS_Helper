@@ -1,35 +1,37 @@
 package controller;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Timer;
-import javafx.event.ActionEvent;
-
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
-import javafx.stage.*;
 import javafx.scene.text.*;
-import javafx.stage.Stage;
 import javafx.scene.control.*;
-import javafx.scene.control.TabPane.*;
+import javafx.scene.text.FontWeight;
 
 @SuppressWarnings("restriction")
+/**
+ * Creates the CountdownTab GUI to be used in the OBS Helper program.
+ * The countdown tab is responsible for allow the user to set a specified
+ * time through the provided buttons or directly on the individual text fields.
+ * The countdown tab coordinates with the TimerController class to write 
+ * the current countdown time to a text file to be read by OBS software.
+ * @author Brenton Haliw
+ *
+ */
 public class CountdownTab {
 
+	// Instance variables for the class
 	private static String directoryPath;
 	private TimerController timer;
 	private TextField timerHoursField, timerMinutesField, timerSecondsField;
 
+	/**
+	 * Constructor for the CountdownTab. Initializes directory path and TimerController
+	 * variables with given parameters.
+	 * @param path
+	 * @param timer
+	 */
 	public CountdownTab(String path, TimerController timer) {
 		directoryPath = path;
 		this.timer = timer;
@@ -50,6 +52,8 @@ public class CountdownTab {
 		timerSecondsField.setAlignment(Pos.CENTER);
 		timerSecondsField.setText("00");
 		timerSecondsField.setTooltip(new Tooltip("Insert Number of Seconds"));
+		
+		this.timer = new TimerController(directoryPath, 0, 0, 0, timerHoursField, timerMinutesField, timerSecondsField);
 	}
 
 	/**
@@ -66,7 +70,8 @@ public class CountdownTab {
 		VBox timerVBox = new VBox(10);
 		timerVBox.setAlignment(Pos.CENTER);
 		Label timerTitle = new Label("Countdown Timer");
-		timerTitle.setFont(new Font(16));
+		timerTitle.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		timerTitle.setStyle("-fx-underline: true ;");
 
 		// Holds the countdown bar
 		HBox timerDetails = new HBox(10);
@@ -91,16 +96,11 @@ public class CountdownTab {
 		Label timerSecondsLabel = new Label("Seconds");
 		secondsBox.getChildren().setAll(timerSecondsField, timerSecondsLabel);
 
-		// HBox control = new HBox(10);
-		// control.setAlignment(Pos.CENTER);
-		// control.getChildren().addAll(timerStartButton, timerStopButton);
-
 		timerDetails.getChildren().addAll(hoursBox, minutesBox, secondsBox);
 		timerVBox.getChildren().addAll(timerTitle, timerDetails, createButtons());
 
 		countdown.setContent(timerVBox);
 
-		this.timer = new TimerController(directoryPath, 0, 0, 0, timerHoursField, timerMinutesField, timerSecondsField);
 		return countdown;
 	}
 
@@ -219,28 +219,31 @@ public class CountdownTab {
 		Button timerPauseButton = new Button("Pause");
 		timerPauseButton.setTooltip(new Tooltip("Pause the Countdown"));
 		timerPauseButton.setOnAction(e -> {
-			this.timer.cancelTimer();
+			try {
+				this.timer.cancelTimer();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		});
 
 		// Stop Button
 		Button timerStopButton = new Button("Reset");
 		timerStopButton.setTooltip(new Tooltip("Stop and Reset Countdown"));
 		timerStopButton.setOnAction(e -> {
-			this.timer.cancelTimer();
+			try {
+				this.timer.cancelTimer();
+			} catch (FileNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 
 			timerHoursField.setText("00");
 			timerMinutesField.setText("00");
 			timerSecondsField.setText("00");
-
-			try {
-				this.timer.writeToFields("00", "00", "00");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
 		});
 
+		// Creating the GridPane for the +/- buttons to be added to
 		pane.add(hm5, 0, 0, 1, 1);
 		pane.add(hm1, 1, 0, 1, 1);
 		pane.add(hourLabel, 2, 0, 2, 1);
@@ -262,37 +265,46 @@ public class CountdownTab {
 		pane.add(timerStartButton, 0, 3, 2, 1);
 		pane.add(timerPauseButton, 2, 3, 2, 1);
 		pane.add(timerStopButton, 4, 3, 2, 1);
-
-	//	timerStartButton.setMaxWidth(Double.MAX_VALUE);
-		//timerPauseButton.setMaxWidth(Double.MAX_VALUE);
-		//timerStopButton.setMaxWidth(Double.MAX_VALUE);
 		
 		GridPane.setFillWidth(timerStartButton, true);
 		GridPane.setFillWidth(timerPauseButton, true);
 		GridPane.setFillWidth(timerStopButton, true);
 		
+		// Centering the nodes within the gridpane and then giving them a drop shadow
 		for (int i = 0; i < pane.getChildren().size(); i++) {
 			GridPane.setHalignment(pane.getChildren().get(i), HPos.CENTER);
-			//pane.getChildren().get(i).setStyle("-fx-effect: dropshadow(three-pass-box, rgba(135, 206, 250, 0.3), 10, 0, 0, 0);");
+			pane.getChildren().get(i).setStyle("-fx-effect: dropshadow(three-pass-box, rgba(135, 206, 250, 0.3), 10, 0, 0, 0);");
 		}
 		
+		// Removing the drop shadow from the labels because it looks weird
 		hourLabel.setStyle("");
 		minuteLabel.setStyle("");
 		secondLabel.setStyle("");
 
+		// Adding the GridPane to the HBox
 		box.getChildren().add(pane);
 
 		return box;
 	}
 
-	private final void handleButton(int value, TextField textfield) {
+	/**
+	 * Helper method so that way we don't repeat a ton of code for the +/- buttons.
+	 * 
+	 * @param value Primitive integer to be added/subtracted to the TextField value
+	 * @param textfield TextField object to be manipulated
+	 * @throws FileNotFoundException 
+	 */
+	private final void handleButton(int value, TextField textfield)  {
 		try {
 			int num = Integer.parseInt(textfield.getText());
 			System.out.println("TextField Value: " + num);
 			num += value;
 			System.out.println("Adding the parameter: " + num);
 
+			// If using the value makes the number go into the negatives
+			// then set it back to zero
 			if (num < 0) {
+				num = 0;
 				textfield.setText("00");
 				System.out.println("Setting text");
 			}
@@ -305,9 +317,25 @@ public class CountdownTab {
 					int h = Integer.parseInt(timerHoursField.getText());
 					int m = Integer.parseInt(timerMinutesField.getText());
 					int s = Integer.parseInt(timerSecondsField.getText());
-					this.timer.cancelTimer();
+					try {
+						this.timer.cancelTimer();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					this.timer.setTimer(h, m, s);
-					this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
+					
+					if(this.timer.getInterval() > 0) {
+						this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
+					} else {
+						try {
+							this.timer.cancelTimer();
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
 				}
 			}
 		} catch (NumberFormatException e) {

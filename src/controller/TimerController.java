@@ -64,13 +64,13 @@ public class TimerController {
 	/**
 	 * Cancels the current timer and then sets the instance variable isRunning to
 	 * false. Allows the TextFields in GUI class to become editable once more.
+	 * @throws FileNotFoundException 
 	 */
-	public void cancelTimer() {
-		System.out.println(this.timer.toString());
+	public void cancelTimer() throws FileNotFoundException {
 		this.timer.cancel();
 		this.timer.purge();
-		System.out.println(this.timer.toString());
 		this.isRunning = false;
+		writeToFile("00", "00", "00");
 		this.hoursField.setEditable(true);
 		this.minutesField.setEditable(true);
 		this.secondsField.setEditable(true);		
@@ -88,7 +88,6 @@ public class TimerController {
 	 * @param minutesField
 	 * @param secondsField
 	 */
-	@SuppressWarnings("restriction")
 	public synchronized void runTimer(TextField hoursField, TextField minutesField, TextField secondsField) {
 		int delay = 1000;
 		int period = 1000;
@@ -133,9 +132,7 @@ public class TimerController {
 							System.out.println(secondsField.getText());
 						});
 						
-						//System.out.println("SecondsField inside of run(): " + secondsField.getText());
-						
-						writeToFields(h, m, s);
+						writeToFile(h, m, s);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -146,8 +143,7 @@ public class TimerController {
 		}
 	}
 	
-	public void writeToFields(String h, String m, String s) throws FileNotFoundException {
-		System.out.println("Writing to file");
+	public void writeToFile(String h, String m, String s) throws FileNotFoundException {
 		// Writing to timer.txt file
 		PrintWriter writer = new PrintWriter(filePath);		
 		writer.println(h + ":" + m + ":" + s);
@@ -155,7 +151,6 @@ public class TimerController {
 	}
 	
 	public String intToString(int value) {
-		System.out.println("Running int into String for value: " + value);
 		String string = Integer.toString(value);
 		
 		if (value < 10) {
@@ -170,14 +165,18 @@ public class TimerController {
 	 * second. If at the end of the timer, cancels it.
 	 * 
 	 * @return Primitive integer representing seconds left
+	 * @throws FileNotFoundException 
 	 */
-	private final int setInterval() {
+	private final int setInterval() throws FileNotFoundException {
 		// Check if at the end of the time
 		if (this.interval == 1) {
-			System.out.println("Canceling timer");
 			cancelTimer();
 		}
 		return --this.interval;
+	}
+	
+	public int getInterval() {
+		return this.interval;
 	}
 
 	/**
@@ -186,7 +185,6 @@ public class TimerController {
 	 * @return Boolean isRunning instance variable, true if running, false if not.
 	 */
 	public boolean getIsRunning() {
-		System.out.println("Checking isRunning method");
 		return this.isRunning;
 	}
 
@@ -198,7 +196,6 @@ public class TimerController {
 	 * @param seconds Primitive integer representing number of seconds
 	 */
 	public void setTimer(int hours, int minutes, int seconds) {
-		System.out.println("Setting the timer: " + hours + " " + minutes + " " + seconds);
 		seconds += (minutes * 60) + (hours * 3600);
 		this.interval = seconds;
 		timer = new Timer();

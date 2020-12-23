@@ -3,7 +3,6 @@ package view;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -58,7 +57,7 @@ public class MainGUI extends Application {
 		Scene scene = new Scene(this.pane, sceneWidth, sceneHeight);
 		
 		darkMode = true;
-		this.window.setTitle("Twitch Countdown Controller");
+		this.window.setTitle("OBS Helper");
 		this.window.setScene(scene);
 		this.window.getScene().getRoot().setStyle("-fx-base:black");
 		this.window.show();
