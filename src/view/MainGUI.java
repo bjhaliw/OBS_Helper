@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import controller.CountdownTab;
 import controller.TimerController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -29,6 +28,7 @@ public class MainGUI extends Application {
 	private boolean darkMode;
 	private TimerController timer;
 	private CountdownTab countdownTab;
+	private MusicTab musicTab;
 
 	/**
 	 * Default Constructor that initializes instance variables
@@ -38,6 +38,7 @@ public class MainGUI extends Application {
 		this.pane = new BorderPane();
 		this.darkMode = false;
 		this.countdownTab = new CountdownTab(directoryPath, timer);
+		this.musicTab = new MusicTab(directoryPath);
 	}
 
 	@Override
@@ -129,8 +130,8 @@ public class MainGUI extends Application {
 	 */
 	public TabPane createTabs() {
 		TabPane pane = new TabPane();
-		pane.getTabs().add(countdownTab.createCountdownTab());
-		pane.getTabs().add(musicTab());
+		pane.getTabs().add(this.countdownTab.createCountdownTab());
+		pane.getTabs().add(this.musicTab.createMusicTab());
 
 		pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		return pane;
@@ -156,12 +157,12 @@ public class MainGUI extends Application {
 		TextField songField = new TextField();
 		songField.setEditable(false);
 
-		Button stopButton = new Button("⏹");
+		Button stopButton = new Button("Stop");
 		stopButton.setOnAction(e -> {
 
 		});
 
-		Button pausePlayButton = new Button("⏯");
+		Button pausePlayButton = new Button("Play");
 		pausePlayButton.setOnAction(e -> {
 
 		});

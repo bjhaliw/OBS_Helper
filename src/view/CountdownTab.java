@@ -1,6 +1,8 @@
-package controller;
+package view;
 
 import java.io.FileNotFoundException;
+
+import controller.TimerController;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
 import javafx.scene.control.Alert.AlertType;
@@ -233,6 +235,7 @@ public class CountdownTab {
 		timerStopButton.setOnAction(e -> {
 			try {
 				this.timer.cancelTimer();
+				this.timer.writeToFile("00", "00", "00");
 			} catch (FileNotFoundException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -330,6 +333,7 @@ public class CountdownTab {
 					} else {
 						try {
 							this.timer.cancelTimer();
+							this.timer.writeToFile("00", "00", "00");
 						} catch (FileNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

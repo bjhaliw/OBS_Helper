@@ -60,7 +60,7 @@ public class TimerController {
 		this.minutesField = minutesField;
 		this.secondsField = secondsField;
 	}
-
+	
 	/**
 	 * Cancels the current timer and then sets the instance variable isRunning to
 	 * false. Allows the TextFields in GUI class to become editable once more.
@@ -70,7 +70,6 @@ public class TimerController {
 		this.timer.cancel();
 		this.timer.purge();
 		this.isRunning = false;
-		writeToFile("00", "00", "00");
 		this.hoursField.setEditable(true);
 		this.minutesField.setEditable(true);
 		this.secondsField.setEditable(true);		
@@ -147,6 +146,7 @@ public class TimerController {
 		// Writing to timer.txt file
 		PrintWriter writer = new PrintWriter(filePath);		
 		writer.println(h + ":" + m + ":" + s);
+		System.out.println(h + ":" + m + ":" + s);
 		writer.close();
 	}
 	
@@ -170,6 +170,7 @@ public class TimerController {
 	private final int setInterval() throws FileNotFoundException {
 		// Check if at the end of the time
 		if (this.interval == 1) {
+			writeToFile("00", "00", "00");
 			cancelTimer();
 		}
 		return --this.interval;
