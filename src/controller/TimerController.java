@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.scene.control.*;
+import view.MainGUI;
 import javafx.application.Platform;
 
 /**
@@ -39,11 +40,11 @@ public class TimerController {
 	 * @param minutes  Primitive integer of the number of minutes
 	 * @param seconds  Primitive integer of the number of seconds
 	 */
-	public TimerController(String filePath, int hours, int minutes, int seconds, TextField hoursField, TextField minutesField, TextField secondsField) {	
+	public TimerController(int hours, int minutes, int seconds, TextField hoursField, TextField minutesField, TextField secondsField) {	
 		seconds += (minutes * 60) + (hours * 3600);
 		
 		// Creating a new text file for the timer if required
-		this.filePath = filePath+"\\timer.txt";
+		this.filePath = MainGUI.directoryPath + "\\timer.txt";
 		file = new File(this.filePath);
 		try {
 			file.createNewFile();

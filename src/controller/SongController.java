@@ -3,6 +3,7 @@ package controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import view.MainGUI;
 import javafx.scene.control.Alert.AlertType;
 
 import java.io.File;
@@ -24,8 +25,8 @@ public class SongController {
 	private boolean isRunning;
 	private Timer timer;
 
-	public SongController(String directoryPath) {
-		this.directoryPath = directoryPath + "\\song.txt";
+	public SongController() {
+		this.directoryPath = MainGUI.directoryPath + "\\song.txt";
 		File file = new File(directoryPath);
 
 		try {
@@ -119,7 +120,7 @@ public class SongController {
 	public void writeToFile() throws FileNotFoundException {
 		// Writing to timer.txt file
 		PrintWriter writer = new PrintWriter(directoryPath);
-		writer.println(this.songName);
+		writer.println("Current Song: " + this.songName + "   ");
 		writer.close();
 	}
 

@@ -24,7 +24,7 @@ public class MainGUI extends Application {
 
 	private Stage window;
 	private BorderPane pane;
-	private static String directoryPath = System.getProperty("user.dir");
+	public static String directoryPath = System.getProperty("user.dir");
 	private boolean darkMode;
 	private TimerController timer;
 	private CountdownTab countdownTab;
@@ -37,13 +37,13 @@ public class MainGUI extends Application {
 		this.window = new Stage();
 		this.pane = new BorderPane();
 		this.darkMode = false;
-		this.countdownTab = new CountdownTab(directoryPath, timer);
-		this.musicTab = new MusicTab(directoryPath);
+		this.countdownTab = new CountdownTab(timer);
+		this.musicTab = new MusicTab();
 	}
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-		int sceneWidth = 600, sceneHeight = 400;
+		int sceneWidth = 650, sceneHeight = 500;
 
 		// If somehow there is no directory path
 		if (directoryPath == null) {
@@ -131,7 +131,7 @@ public class MainGUI extends Application {
 	public TabPane createTabs() {
 		TabPane pane = new TabPane();
 		pane.getTabs().add(this.countdownTab.createCountdownTab());
-		pane.getTabs().add(this.musicTab.createMusicTab());
+		pane.getTabs().add(this.musicTab.createMusicTabBetter());
 
 		pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		return pane;

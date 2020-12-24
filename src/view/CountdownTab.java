@@ -24,7 +24,6 @@ import javafx.scene.text.FontWeight;
 public class CountdownTab {
 
 	// Instance variables for the class
-	private static String directoryPath;
 	private TimerController timer;
 	private TextField timerHoursField, timerMinutesField, timerSecondsField;
 
@@ -34,8 +33,7 @@ public class CountdownTab {
 	 * @param path
 	 * @param timer
 	 */
-	public CountdownTab(String path, TimerController timer) {
-		directoryPath = path;
+	public CountdownTab(TimerController timer) {
 		this.timer = timer;
 		timerHoursField = new TextField();
 		timerHoursField.setMaxWidth(50);
@@ -55,7 +53,7 @@ public class CountdownTab {
 		timerSecondsField.setText("00");
 		timerSecondsField.setTooltip(new Tooltip("Insert Number of Seconds"));
 		
-		this.timer = new TimerController(directoryPath, 0, 0, 0, timerHoursField, timerMinutesField, timerSecondsField);
+		this.timer = new TimerController(0, 0, 0, timerHoursField, timerMinutesField, timerSecondsField);
 	}
 
 	/**
