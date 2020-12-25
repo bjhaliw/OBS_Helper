@@ -24,5 +24,4 @@ Helper program for overlaying text on screen through OBS
 
 # Example Photos
 ![Countdown Dark](https://github.com/bjhaliw/OBS_Helper/blob/main/obshelperexample.png)
-![Countdown Light](https://github.com/bjhaliw/OBS_Helper/blob/main/obslight.png)
-![Music](https://github.com/bjhaliw/OBS_Helper/blob/main/music.png)
+![Music](https://github.com/bjhaliw/OBS_Helper/blob/main/musictab.png)
