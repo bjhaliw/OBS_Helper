@@ -1,13 +1,10 @@
 package view;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
-
-import controller.TimerController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,9 +22,8 @@ public class MainGUI extends Application {
 	private Stage window;
 	private BorderPane pane;
 	public static String directoryPath = System.getProperty("user.dir");
-	private boolean darkMode;
-	private TimerController timer;
-	private CountdownTab countdownTab;
+	public static boolean darkMode;
+	private TimeTab timeTab;
 	private MusicTab musicTab;
 
 	/**
@@ -36,8 +32,8 @@ public class MainGUI extends Application {
 	public MainGUI() {
 		this.window = new Stage();
 		this.pane = new BorderPane();
-		this.darkMode = false;
-		this.countdownTab = new CountdownTab(timer);
+		darkMode = false;
+		this.timeTab = new TimeTab();
 		this.musicTab = new MusicTab();
 	}
 
@@ -56,7 +52,7 @@ public class MainGUI extends Application {
 
 		System.out.println(directoryPath);
 		Scene scene = new Scene(this.pane, sceneWidth, sceneHeight);
-		
+
 		darkMode = true;
 		this.window.setTitle("OBS Helper");
 		this.window.setScene(scene);
@@ -104,13 +100,13 @@ public class MainGUI extends Application {
 		});
 
 		dark.setOnAction(e -> {
-			if (this.darkMode) {
+			if (darkMode) {
 				this.window.getScene().getRoot().setStyle("");
-				this.darkMode = false;
+				darkMode = false;
 				dark.setText("Enable Dark Mode");
 			} else {
 				this.window.getScene().getRoot().setStyle("-fx-base:black");
-				this.darkMode = true;
+				darkMode = true;
 				dark.setText("Disable Dark Mode");
 			}
 
@@ -130,7 +126,7 @@ public class MainGUI extends Application {
 	 */
 	public TabPane createTabs() {
 		TabPane pane = new TabPane();
-		pane.getTabs().add(this.countdownTab.createCountdownTab());
+		pane.getTabs().add(this.timeTab.createCountdownTab());
 		pane.getTabs().add(this.musicTab.createMusicTabBetter());
 
 		pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
@@ -208,7 +204,7 @@ public class MainGUI extends Application {
 
 	protected void credits() {
 		Alert alert = new Alert(AlertType.INFORMATION,
-				"Created by Brenton Haliw.\nBrenton.Haliw@gmail.com\nhttps://www.github.com/bjhaliw", ButtonType.OK);
+				"Created by Brenton Haliw\nBrenton.Haliw@gmail.com\nhttps://www.github.com/bjhaliw", ButtonType.OK);
 		alert.setTitle("Credits");
 		alert.setHeaderText("Thank you for trying me!");
 
@@ -254,6 +250,10 @@ public class MainGUI extends Application {
 
 	}
 
+	/**
+	 * Main method to run the OBS Helper program
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Application.launch(args);
 	}

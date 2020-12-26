@@ -1,25 +1,20 @@
 package controller;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import view.Alerts;
 import view.MainGUI;
-import javafx.scene.control.Alert.AlertType;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,6 +26,10 @@ public class SongController {
 	private boolean isRunning;
 	private Timer timer;
 
+	/**
+	 * Default constructor for the SongController class. Initializes instance
+	 * variables and then creates a new song.txt file if required.
+	 */
 	public SongController() {
 		this.directoryPath = MainGUI.directoryPath + "\\song.txt";
 		File file = new File(directoryPath);
@@ -45,7 +44,16 @@ public class SongController {
 		this.isRunning = false;
 		this.timer = new Timer();
 	}
-	
+
+	/**
+	 * Creates a HashMap<String, String[2]> that matches with the values that the
+	 * user added in the "format" parameter. Loads the HashMap with the required
+	 * values as the keys and then a String array containing the HTML tag and the
+	 * associated text.
+	 * 
+	 * @param format - A String representing how the user wants the text displayed
+	 * @return a HashMap<String, String[]> with the required values loaded into it
+	 */
 	public HashMap<String, String[]> createHashMap(String format) {
 		HashMap<String, String[]> map = new HashMap<>();
 
@@ -66,33 +74,32 @@ public class SongController {
 			if (format.contains("[title]")) {
 				map.put("[title]", new String[] { "<info name=\"title\">", "" });
 			}
-			
+
 			if (format.contains("[album]")) {
 				map.put("[album]", new String[] { "<info name=\"album\">", "" });
 			}
-			
+
 			if (format.contains("[track number]")) {
 				map.put("[track number]", new String[] { "<info name=\"track_number\">", "" });
 			}
-			
+
 			if (format.contains("[copyright]")) {
 				map.put("[copyright]", new String[] { "<info name=\"copyright\">", "" });
 			}
-			
+
 			if (format.contains("[genre]")) {
 				map.put("[genre]", new String[] { "<info name=\"genre\">", "" });
 			}
-			
+
 			if (format.contains("[date]")) {
 				map.put("[date]", new String[] { "<info name=\"date\">", "" });
 			}
-			
+
 			return map;
 
 		}
 
 	}
-	
 
 	/**
 	 * Starts the music collection process. Reads the HTML from VLC's web server and
@@ -124,96 +131,122 @@ public class SongController {
 					Document document = Jsoup.connect(url).header("Authorization",
 							"Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(authString.getBytes())).get();
 
+					
 					// Create a toString of the HTML
 					final String docString = document.toString();
-
-					// Read to manipulate the docString to find required tags
-					String curr;
-					String tag;
-					Iterator<Entry<String, String[]>> it = values.entrySet().iterator();
-					Map.Entry<String, String[]> pair;
-					String output = format;
 					
-					if (format == null) {
-						output = "";
-					}
-					/* 
-					 * Iterates through the HashMap looking for the required tags. Initializes the
-					 * second index of the array with the name.
-					 */
-					while (it.hasNext()) {
-						curr = new String(docString);
-						pair = (Map.Entry<String, String[]>) it.next();
-						tag = pair.getValue()[0];
-
-						if (curr.contains(tag)) {
-							// Remove all HTML text before the tag we want to find
-							curr = curr.substring(curr.indexOf(tag));
-							// Narrow down the text
-							curr = curr.substring(tag.length(), curr.indexOf("</info>"));
-							// Removing leading and trailing whitespace. This is our targeted text
-							curr = curr.trim();
-							
-							System.out.println("Output is currently: " + output);
-
-							System.out.println("Output is now: " + output);
-							System.out.println("Curr: " + curr);
-							// Creating the regex to remove the [....] from the output string
-							String re = pair.getKey();
-							System.out.println("Regex: " + re);
-							// Need to replace [ ] with \[ and \] for the use of regex
-							re = re.replace("[", "\\[");
-							System.out.println("Regex: " + re);
-							re = re.replace("]", "\\]");
-							System.out.println("Regex: " + re);
-							values.get(pair.getKey())[1] = curr;
-							output = output.replace(pair.getKey(), curr);
-							System.out.println("Map: " + values.get(pair.getKey())[1]);
-						}
+					String mediaStatus = new String(docString);
+					
+					if (mediaStatus.contains("<state>")) {
+						System.out.println("Found state");
+						mediaStatus = mediaStatus.substring(mediaStatus.indexOf("<state>"));
+						
+						mediaStatus = mediaStatus.substring("<state>".length(), mediaStatus.indexOf("</state>"));
+						mediaStatus = mediaStatus.trim();
+						System.out.println("Status: " + mediaStatus);
 					}
 					
-					System.out.println(values.keySet().toString());
+					//System.out.println(docString + "\n\n");
 
-					final String finaloutput;
-					
-					if (output.equals("")) { // None of the tags worked
-						finaloutput = values.get("[filename]")[1];
+					if (mediaStatus.equals("stopped")) {
+						System.out.println("Stopped");
+						Platform.runLater(() -> {
+							textField.setText("");
+						});
+						writeToFile("");
 					} else {
-						finaloutput = output;
+
+						// Read to manipulate the docString to find required tags
+						String curr;
+						String tag;
+						Iterator<Entry<String, String[]>> it = values.entrySet().iterator();
+						Map.Entry<String, String[]> pair;
+						String output = format;
+						int counter = 0;
+
+						if (format == null) {
+							output = "";
+						}
+						/*
+						 * Iterates through the HashMap looking for the required tags. Initializes the
+						 * second index of the array with the name.
+						 */
+						while (it.hasNext()) {
+							curr = new String(docString);
+							pair = (Map.Entry<String, String[]>) it.next();
+							tag = pair.getValue()[0];
+
+							// If the current tag is found within the document
+							if (curr.contains(tag)) {
+								// Remove all HTML text before the tag we want to find
+								curr = curr.substring(curr.indexOf(tag));
+								// Narrow down the text
+								curr = curr.substring(tag.length(), curr.indexOf("</info>"));
+								// Removing leading and trailing whitespace. This is our targeted text
+								curr = curr.trim();
+
+								// Adding the targeted text to the required key's value
+								values.get(pair.getKey())[1] = curr;
+								output = output.replace(pair.getKey(), curr);
+								System.out.println("Map: " + values.get(pair.getKey())[1]);
+
+							} else { // Current tag was not found in the document
+								// Replace the tag with a blank string
+								output = output.replace(pair.getKey(), "");
+								// Increase the counter to state how many tags were not found
+								counter++;
+								System.out.println("Counter: " + counter + "Map Size: " +  values.size());
+							}
+						}
+
+						// Creating a final String to display the output to the TextField in the
+						// MusicTab
+						final String finaloutput;
+
+						if (output.equals("") || counter > values.size() - 2) { // None of the tags worked
+							finaloutput = values.get("[filename]")[1];
+						} else {
+							finaloutput = output;
+						}
+
+						// Editing the text of the TextField from the MusicTab
+						Platform.runLater(() -> {
+							textField.setText(finaloutput);
+						});
+
+						// Write to the text file song.txt
+						writeToFile(finaloutput);
+						counter = 0;
 					}
-					// Now that we have an ArrayList full of the text, we will now replace the []
-					// tags in the format string
-
-					Platform.runLater(() -> {
-						textField.setText(finaloutput);
-					});
-
-					// Write to the text file song.txt
-					writeToFile(finaloutput);
 
 				} catch (MalformedURLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (ConnectException e1) {
+					Platform.runLater(() -> {
+						Alerts.badVLCConnection();
+					});	
+					e1.printStackTrace();
+					stopTimer();
 				} catch (HttpStatusException e1) {
 					Platform.runLater(() -> {
-
-						Alert alert = new Alert(AlertType.INFORMATION, "Please reenter your Username and Password.",
-								ButtonType.OK);
-						alert.setTitle("Username/Password Error");
-						alert.setHeaderText("Incorrect Login Credentials");
-
-						alert.show();
+						Alerts.badLoginCredentials();
 					});
 					stopTimer();
-				} catch (IOException e) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					e1.printStackTrace();
 				}
 
 			}
 		}, delay, period);
 	}
 
+	/**
+	 * Stops and deletes the current timer that is being used for the class. Writes
+	 * and empty string to the song.txt file
+	 */
 	public void stopTimer() {
 		this.timer.cancel();
 		this.timer.purge();
@@ -228,6 +261,13 @@ public class SongController {
 		}
 	}
 
+	/**
+	 * Writes the updated format to the song.txt file in the directory that the .exe
+	 * file is located.
+	 * 
+	 * @param input - Formatted string for the user's song information
+	 * @throws FileNotFoundException
+	 */
 	public void writeToFile(String input) throws FileNotFoundException {
 		System.out.println("Writing " + input + " to file in " + directoryPath);
 		// Writing to timer.txt file
@@ -236,6 +276,12 @@ public class SongController {
 		writer.close();
 	}
 
+	/**
+	 * Getter method for the isRunning instance variable. True if the program is
+	 * actively monitoring the music information and false if it is not.
+	 * 
+	 * @return boolean depending on if currently capturing music info
+	 */
 	public boolean getIsRunning() {
 		return this.isRunning;
 	}

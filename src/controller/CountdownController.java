@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.scene.control.*;
@@ -20,11 +19,10 @@ import javafx.application.Platform;
  *
  */
 @SuppressWarnings("restriction")
-public class TimerController {
+public class CountdownController {
 	private int interval;
 	private Timer timer;
 	private File file;
-	private Scanner scanner;
 	private boolean isRunning;
 	private String filePath;
 	private TextField hoursField, minutesField, secondsField;
@@ -40,11 +38,12 @@ public class TimerController {
 	 * @param minutes  Primitive integer of the number of minutes
 	 * @param seconds  Primitive integer of the number of seconds
 	 */
-	public TimerController(int hours, int minutes, int seconds, TextField hoursField, TextField minutesField, TextField secondsField) {	
+	public CountdownController(int hours, int minutes, int seconds, TextField hoursField, TextField minutesField,
+			TextField secondsField) {
 		seconds += (minutes * 60) + (hours * 3600);
-		
+
 		// Creating a new text file for the timer if required
-		this.filePath = MainGUI.directoryPath + "\\timer.txt";
+		this.filePath = MainGUI.directoryPath + "\\countdown.txt";
 		file = new File(this.filePath);
 		try {
 			file.createNewFile();
@@ -52,7 +51,7 @@ public class TimerController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// Init instance variables
 		this.interval = seconds;
 		this.timer = new Timer();
@@ -61,19 +60,20 @@ public class TimerController {
 		this.minutesField = minutesField;
 		this.secondsField = secondsField;
 	}
-	
+
 	/**
 	 * Cancels the current timer and then sets the instance variable isRunning to
 	 * false. Allows the TextFields in GUI class to become editable once more.
-	 * @throws FileNotFoundException 
+	 * 
+	 * @throws FileNotFoundException
 	 */
-	public void cancelTimer() throws FileNotFoundException {
+	public void cancelCountdown() throws FileNotFoundException {
 		this.timer.cancel();
 		this.timer.purge();
 		this.isRunning = false;
 		this.hoursField.setEditable(true);
 		this.minutesField.setEditable(true);
-		this.secondsField.setEditable(true);		
+		this.secondsField.setEditable(true);
 	}
 
 	/**
@@ -84,29 +84,26 @@ public class TimerController {
 	 * set to false at the end of the method. Sets TextFields ability to be edited
 	 * to false
 	 * 
-	 * @param hoursField
-	 * @param minutesField
-	 * @param secondsField
 	 */
-	public synchronized void runTimer(TextField hoursField, TextField minutesField, TextField secondsField) {
+	public synchronized void runTimer() {
 		int delay = 1000;
 		int period = 1000;
-		
-		hoursField.setEditable(false);
-		minutesField.setEditable(false);
-		secondsField.setEditable(false);
+
+		this.hoursField.setEditable(false);
+		this.minutesField.setEditable(false);
+		this.secondsField.setEditable(false);
 
 		if (this.interval > 0) {
 			this.isRunning = true;
 			this.timer.scheduleAtFixedRate(new TimerTask() {
 
 				public void run() {
-					
-					try {				
-						//System.out.println(isRunning);
+
+					try {
+						// System.out.println(isRunning);
 						int hours = 0, minutes = 0, seconds = 0, time = 0;
 						time = setInterval();
-						//System.out.println("Time:" + time);
+						// System.out.println("Time:" + time);
 
 						// Updating amount of hours left
 						hours = time / 3600;
@@ -123,15 +120,15 @@ public class TimerController {
 						String h = intToString(hours);
 						String m = intToString(minutes);
 						String s = intToString(seconds);
-						
+
 						Platform.runLater(() -> {
 							hoursField.setText(h);
 							minutesField.setText(m);
 							System.out.println(s);
-							secondsField.setText(s);	
+							secondsField.setText(s);
 							System.out.println(secondsField.getText());
 						});
-						
+
 						writeToFile(h, m, s);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -142,22 +139,22 @@ public class TimerController {
 
 		}
 	}
-	
+
 	public void writeToFile(String h, String m, String s) throws FileNotFoundException {
 		// Writing to timer.txt file
-		PrintWriter writer = new PrintWriter(filePath);		
+		PrintWriter writer = new PrintWriter(filePath);
 		writer.println(h + ":" + m + ":" + s);
 		System.out.println(h + ":" + m + ":" + s);
 		writer.close();
 	}
-	
+
 	public String intToString(int value) {
 		String string = Integer.toString(value);
-		
+
 		if (value < 10) {
 			string = "0" + string;
 		}
-		
+
 		return string;
 	}
 
@@ -166,23 +163,23 @@ public class TimerController {
 	 * second. If at the end of the timer, cancels it.
 	 * 
 	 * @return Primitive integer representing seconds left
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 */
 	private final int setInterval() throws FileNotFoundException {
 		// Check if at the end of the time
 		if (this.interval == 1) {
 			writeToFile("00", "00", "00");
-			cancelTimer();
+			cancelCountdown();
 		}
 		return --this.interval;
 	}
-	
+
 	public int getInterval() {
 		return this.interval;
 	}
 
 	/**
-	 * Tells whether or not there is a timer that is currently running.
+	 * Tells whether or not the countdown is currently running
 	 * 
 	 * @return Boolean isRunning instance variable, true if running, false if not.
 	 */
@@ -191,13 +188,13 @@ public class TimerController {
 	}
 
 	/**
-	 * User input to set a new Timer with updated time.
+	 * User input to set a new Countdown with updated time.
 	 * 
-	 * @param hours   Primitive integer representing number of hours
-	 * @param minutes Primitive integer representing number of minutes
-	 * @param seconds Primitive integer representing number of seconds
+	 * @param hours   - Primitive integer representing number of hours
+	 * @param minutes - Primitive integer representing number of minutes
+	 * @param seconds - Primitive integer representing number of seconds
 	 */
-	public void setTimer(int hours, int minutes, int seconds) {
+	public void setCountdown(int hours, int minutes, int seconds) {
 		seconds += (minutes * 60) + (hours * 3600);
 		this.interval = seconds;
 		timer = new Timer();
