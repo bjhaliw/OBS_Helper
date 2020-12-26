@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import controller.TimerController;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.control.*;
@@ -203,7 +202,7 @@ public class CountdownTab {
 						minutesInt = Integer.parseInt(timerMinutesField.getText());
 						secondsInt = Integer.parseInt(timerSecondsField.getText());
 					} catch (NumberFormatException exception) {
-						timerNumbersOnly();
+						Alerts.timerNumbersOnly();
 					}
 				}
 
@@ -315,9 +314,9 @@ public class CountdownTab {
 
 				// Start a new timer automatically if timer is running
 				if (this.timer.getIsRunning()) {
-					int h = Integer.parseInt(timerHoursField.getText());
-					int m = Integer.parseInt(timerMinutesField.getText());
-					int s = Integer.parseInt(timerSecondsField.getText());
+					int h = Integer.parseInt(this.timerHoursField.getText());
+					int m = Integer.parseInt(this.timerMinutesField.getText());
+					int s = Integer.parseInt(this.timerSecondsField.getText());
 					try {
 						this.timer.cancelTimer();
 					} catch (FileNotFoundException e) {
@@ -327,7 +326,7 @@ public class CountdownTab {
 					this.timer.setTimer(h, m, s);
 					
 					if(this.timer.getInterval() > 0) {
-						this.timer.runTimer(timerHoursField, timerMinutesField, timerSecondsField);
+						this.timer.runTimer(this.timerHoursField, this.timerMinutesField, this.timerSecondsField);
 					} else {
 						try {
 							this.timer.cancelTimer();
@@ -341,17 +340,10 @@ public class CountdownTab {
 				}
 			}
 		} catch (NumberFormatException e) {
-			timerNumbersOnly();
+			Alerts.timerNumbersOnly();
 		}
 
 	}
 
-	protected void timerNumbersOnly() {
-		Alert alert = new Alert(AlertType.INFORMATION,
-				"Please check fields for unneeded characters.\nOnly numbers are allowed in the fields.", ButtonType.OK);
-		alert.setTitle("Countdown Error");
-		alert.setHeaderText("Numeric Values Only in Fields");
 
-		alert.show();
-	}
 }
