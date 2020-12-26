@@ -23,6 +23,5 @@ Helper program for overlaying text on screen through OBS
 - Quick Scene Changer
 
 # Example Photos
-![Countdown Dark](https://github.com/bjhaliw/OBS_Helper/blob/main/obshelperexample.png)
-![Countdown Light](https://github.com/bjhaliw/OBS_Helper/blob/main/obslight.png)
-![Music](https://github.com/bjhaliw/OBS_Helper/blob/main/music.png)
+![Countdown Dark](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/count.png)
+![Music](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/musictab.png)
