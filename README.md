@@ -49,6 +49,7 @@ Helper program for overlaying text on screen through OBS. Lets the user create a
 - Quick Scene Changer
 - Save preferences for next time use
 - Custom URL selection and port for the VLC HTTP player
+- Create custom text documents with desired text to also be displayed
 
 # Example Photos
 ![Time](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/timertab.png)
