@@ -1,5 +1,5 @@
 # OBS_Helper
-Helper program for overlaying text on screen through OBS
+Helper program for overlaying text on screen through OBS. Lets the user create and display text on the screen for information such as a countdown timer, how long the stream has been running for, and what song is currently playing.
 
 # Current Features
 
