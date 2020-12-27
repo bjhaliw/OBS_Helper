@@ -80,7 +80,6 @@ public class TimeTab {
 
 		Separator sep = new Separator();
 		sep.setOrientation(Orientation.VERTICAL);
-		Separator sep1 = new Separator();
 
 		// Loading the box to display the UI elements
 		box.getChildren().addAll(createCountdown(), sep, createStopwatch());
@@ -381,7 +380,8 @@ public class TimeTab {
 		pane.add(countdownStartButton, 0, 3, 2, 1);
 		pane.add(countdownPauseButton, 2, 3, 2, 1);
 		pane.add(countdownStopButton, 4, 3, 2, 1);
-		
+
+
 		GridPane.setFillWidth(countdownStartButton, true);
 		GridPane.setFillWidth(countdownPauseButton, true);
 		GridPane.setFillWidth(countdownStopButton, true);
@@ -389,14 +389,9 @@ public class TimeTab {
 		// Centering the nodes within the gridpane and then giving them a drop shadow
 		for (int i = 0; i < pane.getChildren().size(); i++) {
 			GridPane.setHalignment(pane.getChildren().get(i), HPos.CENTER);
-			pane.getChildren().get(i)
-					.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(135, 206, 250, 0.3), 10, 0, 0, 0);");
+			//pane.getChildren().get(i)
+					//.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(135, 206, 250, 0.3), 10, 0, 0, 0);");
 		}
-
-		// Removing the drop shadow from the labels because it looks weird
-		hourLabel.setStyle("");
-		minuteLabel.setStyle("");
-		secondLabel.setStyle("");
 
 		// Adding the GridPane to the HBox
 		box.getChildren().add(pane);
