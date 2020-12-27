@@ -80,6 +80,7 @@ public class TimeTab {
 
 		Separator sep = new Separator();
 		sep.setOrientation(Orientation.VERTICAL);
+		Separator sep1 = new Separator();
 
 		// Loading the box to display the UI elements
 		box.getChildren().addAll(createCountdown(), sep, createStopwatch());
@@ -150,10 +151,19 @@ public class TimeTab {
 			this.stopwatchMinutesField.setText("00");
 			this.stopwatchSecondsField.setText("00");
 		});
+		
+		Label textFormat = new Label("Text File Format");
+		ComboBox<String> stopCombo = new ComboBox<>();
+		Button formatHelp = new Button("Format Help");
+		
+		HBox format = new HBox(10);
+		format.setAlignment(Pos.CENTER);
+		format.getChildren().addAll(textFormat, stopCombo, formatHelp);
+		CheckBox checkBox = new CheckBox("Hide Unused Values");
 
 		buttonsBox.getChildren().addAll(start, pause, reset);
 
-		timerBox.getChildren().addAll(title, fieldsBox, buttonsBox);
+		timerBox.getChildren().addAll(title, fieldsBox, buttonsBox, format, checkBox);
 		return timerBox;
 	}
 
@@ -344,6 +354,10 @@ public class TimeTab {
 			this.countdownMinutesField.setText("00");
 			this.countdownSecondsField.setText("00");
 		});
+		
+		Label textFormat = new Label("Text File Format");
+		ComboBox<String> stopCombo = new ComboBox<>();
+		Button formatHelp = new Button("Format Help");
 
 		// Creating the GridPane for the +/- buttons to be added to
 		pane.add(hm5, 0, 0, 1, 1);
@@ -367,7 +381,7 @@ public class TimeTab {
 		pane.add(countdownStartButton, 0, 3, 2, 1);
 		pane.add(countdownPauseButton, 2, 3, 2, 1);
 		pane.add(countdownStopButton, 4, 3, 2, 1);
-
+		
 		GridPane.setFillWidth(countdownStartButton, true);
 		GridPane.setFillWidth(countdownPauseButton, true);
 		GridPane.setFillWidth(countdownStopButton, true);

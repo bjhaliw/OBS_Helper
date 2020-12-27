@@ -32,7 +32,7 @@ public class MainGUI extends Application {
 	public MainGUI() {
 		this.window = new Stage();
 		this.pane = new BorderPane();
-		darkMode = false;
+		darkMode = true;
 		this.timeTab = new TimeTab();
 		this.musicTab = new MusicTab();
 	}
@@ -53,7 +53,6 @@ public class MainGUI extends Application {
 		System.out.println(directoryPath);
 		Scene scene = new Scene(this.pane, sceneWidth, sceneHeight);
 
-		darkMode = true;
 		this.window.setTitle("OBS Helper");
 		this.window.setScene(scene);
 		this.window.getScene().getRoot().setStyle("-fx-base:black");
@@ -212,12 +211,30 @@ public class MainGUI extends Application {
 	}
 
 	public void helpMenu() {
-		BorderPane pane = new BorderPane();
-		pane.setCenter(new Label("Sup dudes"));
-		Scene scene = new Scene(pane);
+		TabPane pane = new TabPane();
+		
+		Tab welcome = new Tab("Welcome");
+		Tab setup = new Tab("First Time Setup");
+		Tab countdown = new Tab("Countdown");
+		Tab stopwatch = new Tab("Stopwatch");
+		Tab song = new Tab("Song");
+		
+		Label title = new Label("OBS Helper Tutorial");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		title.setStyle("-fx-underline: true ;");
+		
+		welcome.setContent(title);
+		pane.getTabs().addAll(welcome, setup, countdown, stopwatch, song);
+		pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+		
+		Scene scene = new Scene(pane, 500, 500);
 		Stage stage = new Stage();
-
 		stage.setScene(scene);
+		
+		if (MainGUI.darkMode) {
+			stage.getScene().getRoot().setStyle("-fx-base:black");
+		}
+		stage.setTitle("How to Use");
 		stage.show();
 	}
 

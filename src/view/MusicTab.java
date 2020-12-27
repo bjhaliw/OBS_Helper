@@ -222,6 +222,10 @@ public class MusicTab {
 
 	}
 
+	/**
+	 * Launches a new window with information on the different markdown
+	 * tags used to pull song data from VLC media player.
+	 */
 	public void launchFormatStage() {
 		BorderPane pane = new BorderPane();
 		Label title = new Label("Song Capturing Format");

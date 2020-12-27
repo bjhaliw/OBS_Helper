@@ -26,6 +26,13 @@ public class StopwatchController  {
 	private final TextField hoursField, minutesField, secondsField;
 	private int interval;
 	
+	/**
+	 * Constructor for the StopwatchController class. Creates a new file called stopwatch.txt
+	 * for the time to be saved to.
+	 * @param hoursField
+	 * @param minutesField
+	 * @param secondsField
+	 */
 	public StopwatchController(TextField hoursField, TextField minutesField, TextField secondsField) {
 		
 		this.filePath = MainGUI.directoryPath + "\\stopwatch.txt";
@@ -43,6 +50,9 @@ public class StopwatchController  {
 		this.interval = 0;
 	}
 	
+	/**
+	 * Creates a new Timer and runs the new thread.
+	 */
 	public void startStopwatch() {
 		int delay = 1000;
 		int period = 1000;
@@ -71,12 +81,13 @@ public class StopwatchController  {
 					// Updating amount of seconds left
 					seconds = time;
 
-					
+					// Getting String representations of the current
+					// hours, minutes, and seconds
 					String h = intToString(hours);
 					String m = intToString(minutes);
 					String s = intToString(seconds);
-					System.out.println("Seconds String: " + s);
 
+					// Writes to the applicable TextFields
 					Platform.runLater(() -> {
 						hoursField.setText(h);
 						minutesField.setText(m);
@@ -84,6 +95,7 @@ public class StopwatchController  {
 						System.out.println(secondsField.getText());
 					});
 
+					// Writing to the stopwatch.txt file
 					writeToFile(h, m, s);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -93,24 +105,40 @@ public class StopwatchController  {
 		}, delay, period);
 	}
 	
+	/**
+	 * Writes the hours, minutes, and seconds to the file 
+	 * @param h - Hours
+	 * @param m - Minutes
+	 * @param s - Seconds
+	 * @throws FileNotFoundException
+	 */
 	public void writeToFile(String h, String m, String s) throws FileNotFoundException {
 		// Writing to timer.txt file
 		PrintWriter writer = new PrintWriter(filePath);
 		writer.println(h + ":" + m + ":" + s);
-		System.out.println(h + ":" + m + ":" + s);
 		writer.close();
 	}
 	
+	/**
+	 * Setter for the interval instance variable
+	 * @param interval - seconds of the interval
+	 */
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}
 	
+	/**
+	 * Pauses the Stopwatch but keeps the interval
+	 */
 	public void pauseStopwatch() {
 		this.timer.cancel();
 		this.timer.purge();
 		this.isRunning = false;
 	}
 	
+	/**
+	 * Pauses the Stopwatch and resets the interval to 0
+	 */
 	public void resetStopwatch() {
 		pauseStopwatch();
 		this.interval = 0;
@@ -120,6 +148,12 @@ public class StopwatchController  {
 		return this.isRunning;
 	}
 	
+	/**
+	 * Converts an integer to a String and concatenates
+	 * a 0 to the front if the value is under 10
+	 * @param value - String to be converted
+	 * @return - a String representation of the time field
+	 */
 	public String intToString(int value) {
 		String string = Integer.toString(value);
 
