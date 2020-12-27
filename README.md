@@ -51,5 +51,5 @@ Helper program for overlaying text on screen through OBS
 - Custom URL selection and port for the VLC HTTP player
 
 # Example Photos
-![Time](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/timetab.png)
+![Time](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/timertab.png)
 ![Music](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/musictab.png)
