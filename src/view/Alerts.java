@@ -35,7 +35,7 @@ public class Alerts {
 		alert.showAndWait();
 	}
 
-	public static void countdownNumbersOnly() {
+	public static void numbersOnly() {
 		Alert alert = new Alert(AlertType.INFORMATION,
 				"Please check fields for unneeded characters.\nOnly numbers are allowed in the fields.", ButtonType.OK);
 		alert.setTitle("Countdown Error");

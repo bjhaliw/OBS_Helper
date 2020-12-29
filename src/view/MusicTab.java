@@ -2,13 +2,9 @@ package view;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-
-import org.jsoup.HttpStatusException;
-
 import controller.SongController;
 import javafx.geometry.Pos;
 import javafx.scene.text.Font;
@@ -38,7 +34,7 @@ public class MusicTab {
 	 * 
 	 * @return a tab containing the music interface
 	 */
-	public Tab createMusicTabBetter() {
+	public Tab createMusicTab() {
 		Tab music = new Tab("Music Information");
 		music.setTooltip(new Tooltip("Menu for Stream Music"));
 
@@ -47,6 +43,7 @@ public class MusicTab {
 		Label musicTitle = new Label("Stream Music Information");
 		musicTitle.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		musicTitle.setStyle("-fx-underline: true ;");
+		musicTitle.setAlignment(Pos.CENTER);
 
 		GridPane pane = new GridPane();
 		pane.setAlignment(Pos.CENTER);

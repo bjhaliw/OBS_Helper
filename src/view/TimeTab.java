@@ -3,14 +3,18 @@ package view;
 import java.io.FileNotFoundException;
 
 import controller.CountdownController;
+import controller.ReadAndWrite;
 import controller.StopwatchController;
 import javafx.geometry.Pos;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.control.*;
 import javafx.scene.text.FontWeight;
 import javafx.geometry.Orientation;
+import javafx.geometry.Insets;
 
 @SuppressWarnings("restriction")
 /**
@@ -62,29 +66,71 @@ public class TimeTab {
 		field.setText("00");
 		field.setEditable(setEditable);
 		return field;
-	}
-
-
+	}	
+	
 	/**
 	 * Creates the countdown tab to be used in the main GUI along with the required
 	 * buttons
 	 * 
 	 * @return - a tab containing the countdown interface
 	 */
-	public Tab createCountdownTab() {
+	public Tab createTimeTab() {
 		Tab countdown = new Tab("Countdown and Stopwatch");
 		countdown.setTooltip(new Tooltip("Menu for countdown and steam uptime"));
 
+		
+		VBox main = new VBox();
+		main.setAlignment(Pos.CENTER);
 		HBox box = new HBox(50);
 		box.setAlignment(Pos.CENTER);
+		VBox.setVgrow(box, Priority.ALWAYS);
 
 		Separator sep = new Separator();
-		sep.setOrientation(Orientation.VERTICAL);
+		sep.setOrientation(Orientation.VERTICAL);		
+		
+		Separator sep1 = new Separator();		
+		
+		Label countdownLabel = new Label("Countdown Text Format");
+		ComboBox<String> countdownCombo = new ComboBox<>();
+		CheckBox countCB = new CheckBox("Hide Unused Time Values");
+		countdownCombo.setPromptText("Type or Select Format");
+		countdownCombo.setMinWidth(200);
+		countdownCombo.setEditable(true);
+		countdownCombo.setItems(createFormatList());
+		
+
+		Label stopwatchLabel = new Label("Stopwatch Text Format");
+		ComboBox<String> stopwatchCombo = new ComboBox<>();
+		CheckBox stopwatchCB = new CheckBox("Hide Unused Time Values");
+		stopwatchCombo.setMinWidth(200);
+		stopwatchCombo.setPromptText("Type or Select Format");
+		stopwatchCombo.setEditable(true);
+		stopwatchCombo.setItems(createFormatList());
+		
+		GridPane pane = new GridPane();
+		pane.setHgap(10);
+		pane.setVgap(10);
+		pane.setAlignment(Pos.CENTER);
+		
+		pane.add(countdownLabel, 0, 0);
+		pane.add(stopwatchLabel, 0, 1);
+		
+		pane.add(countdownCombo, 1, 0, 2, 1);
+		pane.add(countCB, 3, 0);
+		
+		pane.add(stopwatchCombo, 1, 1, 2, 1);
+		pane.add(stopwatchCB, 3, 1);
+		
+		GridPane.setHalignment(countdownLabel, HPos.RIGHT);
+		GridPane.setHalignment(stopwatchLabel, HPos.RIGHT);
+		
+		pane.setPadding(new Insets(20,0,40,0));
 
 		// Loading the box to display the UI elements
-		box.getChildren().addAll(createCountdown(), sep, createStopwatch());
+		box.getChildren().addAll(createCountdown(), sep, createStopwatch(stopwatchCombo, stopwatchCB));
 
-		countdown.setContent(box);
+		main.getChildren().addAll(box, sep1, pane);
+		countdown.setContent(main);
 
 		return countdown;
 	}
@@ -94,7 +140,7 @@ public class TimeTab {
 	 * 
 	 * @return - a VBox containing the graphical elements of the timer
 	 */
-	private VBox createStopwatch() {
+	private VBox createStopwatch(ComboBox<String> combo, CheckBox cb) {
 		VBox timerBox = new VBox(10);
 		timerBox.setAlignment(Pos.CENTER);
 
@@ -140,7 +186,7 @@ public class TimeTab {
 		Button reset = new Button("Reset");
 		reset.setOnAction(e -> {
 			this.stopwatchController.resetStopwatch();
-			try {
+			try {			
 				this.stopwatchController.writeToFile("00", "00", "00");
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -150,19 +196,10 @@ public class TimeTab {
 			this.stopwatchMinutesField.setText("00");
 			this.stopwatchSecondsField.setText("00");
 		});
-		
-		Label textFormat = new Label("Text File Format");
-		ComboBox<String> stopCombo = new ComboBox<>();
-		Button formatHelp = new Button("Format Help");
-		
-		HBox format = new HBox(10);
-		format.setAlignment(Pos.CENTER);
-		format.getChildren().addAll(textFormat, stopCombo, formatHelp);
-		CheckBox checkBox = new CheckBox("Hide Unused Values");
 
 		buttonsBox.getChildren().addAll(start, pause, reset);
 
-		timerBox.getChildren().addAll(title, fieldsBox, buttonsBox, format, checkBox);
+		timerBox.getChildren().addAll(title, fieldsBox, buttonsBox);
 		return timerBox;
 	}
 
@@ -314,7 +351,7 @@ public class TimeTab {
 						minutesInt = Integer.parseInt(this.countdownMinutesField.getText());
 						secondsInt = Integer.parseInt(this.countdownSecondsField.getText());
 					} catch (NumberFormatException exception) {
-						Alerts.countdownNumbersOnly();
+						Alerts.numbersOnly();
 					}
 				}
 
@@ -329,12 +366,7 @@ public class TimeTab {
 		Button countdownPauseButton = new Button("Pause");
 		countdownPauseButton.setTooltip(new Tooltip("Pause the Countdown"));
 		countdownPauseButton.setOnAction(e -> {
-			try {
-				this.countdownController.cancelCountdown();
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			this.countdownController.cancelCountdown();
 		});
 
 		// Stop Button
@@ -421,19 +453,14 @@ public class TimeTab {
 			}
 
 			if (num >= 0) {
-				textfield.setText(this.countdownController.intToString(num));
+				textfield.setText(ReadAndWrite.formatIntToString(num));
 
 				// Start a new timer automatically if timer is running
 				if (this.countdownController.getIsRunning()) {
 					int h = Integer.parseInt(this.countdownHoursField.getText());
 					int m = Integer.parseInt(this.countdownMinutesField.getText());
 					int s = Integer.parseInt(this.countdownSecondsField.getText());
-					try {
-						this.countdownController.cancelCountdown();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					this.countdownController.cancelCountdown();
 					this.countdownController.setCountdown(h, m, s);
 
 					if (this.countdownController.getInterval() > 0) {
@@ -451,8 +478,17 @@ public class TimeTab {
 				}
 			}
 		} catch (NumberFormatException e) {
-			Alerts.countdownNumbersOnly();
+			Alerts.numbersOnly();
 		}
+
+	}
+	private ObservableList<String> createFormatList() {
+		ObservableList<String> list = FXCollections.observableArrayList();
+		
+		list.add("[hour]:[minute]:[second]");
+		list.add("[hour] hour(s), [minute] minute(s), [second] second(s)");
+		
+		return list;
 
 	}
 

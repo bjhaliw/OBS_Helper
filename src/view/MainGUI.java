@@ -25,6 +25,7 @@ public class MainGUI extends Application {
 	public static boolean darkMode;
 	private TimeTab timeTab;
 	private MusicTab musicTab;
+	private PreferencesTab prefTab;
 
 	/**
 	 * Default Constructor that initializes instance variables
@@ -35,6 +36,7 @@ public class MainGUI extends Application {
 		darkMode = true;
 		this.timeTab = new TimeTab();
 		this.musicTab = new MusicTab();
+		this.prefTab = new PreferencesTab();
 	}
 
 	@Override
@@ -125,8 +127,9 @@ public class MainGUI extends Application {
 	 */
 	public TabPane createTabs() {
 		TabPane pane = new TabPane();
-		pane.getTabs().add(this.timeTab.createCountdownTab());
-		pane.getTabs().add(this.musicTab.createMusicTabBetter());
+		pane.getTabs().add(this.timeTab.createTimeTab());
+		pane.getTabs().add(this.musicTab.createMusicTab());
+		pane.getTabs().add(this.prefTab.createPreferencesTab());
 
 		pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		return pane;
@@ -211,23 +214,8 @@ public class MainGUI extends Application {
 	}
 
 	public void helpMenu() {
-		TabPane pane = new TabPane();
-		
-		Tab welcome = new Tab("Welcome");
-		Tab setup = new Tab("First Time Setup");
-		Tab countdown = new Tab("Countdown");
-		Tab stopwatch = new Tab("Stopwatch");
-		Tab song = new Tab("Song");
-		
-		Label title = new Label("OBS Helper Tutorial");
-		title.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
-		title.setStyle("-fx-underline: true ;");
-		
-		welcome.setContent(title);
-		pane.getTabs().addAll(welcome, setup, countdown, stopwatch, song);
-		pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-		
-		Scene scene = new Scene(pane, 500, 500);
+		HelpMenu menu = new HelpMenu();
+		Scene scene = new Scene(menu.createHelpMenu(), 500, 500);
 		Stage stage = new Stage();
 		stage.setScene(scene);
 		

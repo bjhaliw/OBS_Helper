@@ -44,7 +44,7 @@ public class CountdownController {
 
 		// Creating a new text file for the timer if required
 		this.filePath = MainGUI.directoryPath + "\\countdown.txt";
-		file = new File(this.filePath);
+		this.file = new File(this.filePath);
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
@@ -67,7 +67,7 @@ public class CountdownController {
 	 * 
 	 * @throws FileNotFoundException
 	 */
-	public void cancelCountdown() throws FileNotFoundException {
+	public void cancelCountdown() {
 		this.timer.cancel();
 		this.timer.purge();
 		this.isRunning = false;
@@ -117,16 +117,14 @@ public class CountdownController {
 						seconds = time;
 
 						// Updating the TextFields from the GUI
-						String h = intToString(hours);
-						String m = intToString(minutes);
-						String s = intToString(seconds);
+						String h = ReadAndWrite.formatIntToString(hours);
+						String m = ReadAndWrite.formatIntToString(minutes);
+						String s = ReadAndWrite.formatIntToString(seconds);
 
 						Platform.runLater(() -> {
 							hoursField.setText(h);
 							minutesField.setText(m);
-							System.out.println(s);
 							secondsField.setText(s);
-							System.out.println(secondsField.getText());
 						});
 
 						writeToFile(h, m, s);
@@ -144,19 +142,9 @@ public class CountdownController {
 		// Writing to timer.txt file
 		PrintWriter writer = new PrintWriter(filePath);
 		writer.println(h + ":" + m + ":" + s);
-		System.out.println(h + ":" + m + ":" + s);
 		writer.close();
 	}
 
-	public String intToString(int value) {
-		String string = Integer.toString(value);
-
-		if (value < 10) {
-			string = "0" + string;
-		}
-
-		return string;
-	}
 
 	/**
 	 * Helper method ran inside of the runTimer method. Decrements time by one

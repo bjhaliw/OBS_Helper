@@ -83,16 +83,15 @@ public class StopwatchController  {
 
 					// Getting String representations of the current
 					// hours, minutes, and seconds
-					String h = intToString(hours);
-					String m = intToString(minutes);
-					String s = intToString(seconds);
+					String h = ReadAndWrite.formatIntToString(hours);
+					String m = ReadAndWrite.formatIntToString(minutes);
+					String s = ReadAndWrite.formatIntToString(seconds);
 
 					// Writes to the applicable TextFields
 					Platform.runLater(() -> {
 						hoursField.setText(h);
 						minutesField.setText(m);
 						secondsField.setText(s);
-						System.out.println(secondsField.getText());
 					});
 
 					// Writing to the stopwatch.txt file
@@ -146,22 +145,6 @@ public class StopwatchController  {
 	
 	public boolean getIsRunning() {
 		return this.isRunning;
-	}
-	
-	/**
-	 * Converts an integer to a String and concatenates
-	 * a 0 to the front if the value is under 10
-	 * @param value - String to be converted
-	 * @return - a String representation of the time field
-	 */
-	public String intToString(int value) {
-		String string = Integer.toString(value);
-
-		if (value < 10) {
-			string = "0" + string;
-		}
-
-		return string;
 	}
 
 }
