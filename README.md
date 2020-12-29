@@ -52,5 +52,5 @@ Helper program for overlaying text on screen through OBS. Lets the user create a
 - Create custom text documents with desired text to also be displayed
 
 # Example Photos
-![Time](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/timertab.png)
+![Time](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/time.png)
 ![Music](https://github.com/bjhaliw/OBS_Helper/blob/main/Example%20Photos/musictab.png)
