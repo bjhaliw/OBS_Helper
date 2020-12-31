@@ -3,6 +3,9 @@ package controller;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+
 /**
  * This class is responsible for the creation, reading, and writing of the text
  * files that will be used for the overlay in OBS software. The class also
@@ -12,6 +15,7 @@ import java.io.PrintWriter;
  * @author Brenton Haliw
  *
  */
+@SuppressWarnings("restriction")
 public class ReadAndWrite {
 
 	/**
@@ -34,6 +38,52 @@ public class ReadAndWrite {
 	}
 
 	/**
+	 * Looks through the desired format of the time values and removes any that are
+	 * currently not being used. Example: 00:15:13 will be 15:13 instead.
+	 * 
+	 * @param h      - String of the hour value
+	 * @param m      - String of the minute value
+	 * @param s      - String of the second value
+	 * @param format - String of the desired format
+	 * @return - A new formatted string without the unused time values
+	 */
+	public static String removeUnusedTimeValues(String h, String m, String s, String format) {
+		int hour = Integer.parseInt(h);
+		int minute = Integer.parseInt(m);
+		int second = Integer.parseInt(s);
+
+		int totalTime = (hour * 3600) + (minute * 60) + second;
+
+		if (format == null || format.equals("")) {
+			format = "[hour]:[minute]:[second]";
+		}
+
+		String newFormat = new String(format);
+
+		if (totalTime < 3600) {
+			if (format.equals("[hour]:[minute]:[second]")) {
+				newFormat = format.substring("[hour]:".length());
+			} else if (format.equals("[hour] hour(s), [minute] minute(s), [second] second(s)")) {
+				newFormat = format.substring("[hour] hour(s), ".length());
+			}
+		}
+
+		if (totalTime < 60) {
+			if (format.equals("[hour]:[minute]:[second]")) {
+				newFormat = newFormat.substring("[minute]:".length());
+			} else if (format.equals("[hour] hour(s), [minute] minute(s), [second] second(s)")) {
+				newFormat = newFormat.substring("[minute] minute(s), ".length());
+			}
+		}
+
+		if (totalTime <= 0) {
+			newFormat = "";
+		}
+
+		return newFormat;
+	}
+
+	/**
 	 * Replaces the time value tags in the desired formatted string.
 	 * 
 	 * @param h      - hour time value
@@ -43,6 +93,11 @@ public class ReadAndWrite {
 	 * @return - a String with the tags replaced by the time values
 	 */
 	public static String replaceTimeFormattedString(String h, String m, String s, String format) {
+
+		if (format == null || format.equals("")) {
+			format = "[hour]:[minute]:[second]";
+		}
+
 		String output = new String(format);
 
 		if (output.contains("[hour]")) {
@@ -94,4 +149,18 @@ public class ReadAndWrite {
 
 		return string;
 	}
+	
+	public static void writeToFile(String hour, String minute, String second, ComboBox<String> combo, CheckBox cb) {
+		String format = combo.getValue();
+		hour = ReadAndWrite.removeLeadingZeroes(hour);
+		
+		if (cb.isSelected()) {
+			format = ReadAndWrite.removeUnusedTimeValues(hour, minute, second, format);
+		}
+		
+		format = ReadAndWrite.replaceTimeFormattedString(hour, minute, second, format);
+		
+		System.out.println(format);
+	}
+
 }

@@ -119,7 +119,7 @@ public class MainGUI extends Application {
 
 		return menuBar;
 	}
-
+	
 	/**
 	 * Creates all the tabs required for the GUI
 	 * 

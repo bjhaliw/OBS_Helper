@@ -48,6 +48,7 @@ public class StopwatchController  {
 		this.minutesField = minutesField;
 		this.secondsField = secondsField;
 		this.interval = 0;
+		this.timer = new Timer();
 	}
 	
 	/**
@@ -124,6 +125,10 @@ public class StopwatchController  {
 	 */
 	public void setInterval(int interval) {
 		this.interval = interval;
+	}
+	
+	public int getInterval() {
+		return this.interval;
 	}
 	
 	/**

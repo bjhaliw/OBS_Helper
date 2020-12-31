@@ -57,6 +57,26 @@ public class Test {
 		System.out.println(setValues(h, m, s, format3));
 		
 		System.out.println(ReadAndWrite.removeLeadingZeroes("00055"));
+		
+		
+		int hour = Integer.parseInt(h);
+		int minute = Integer.parseInt(m);
+		int second = Integer.parseInt(s);
+		String format = "[hour]:[minute]:[second]";
+		
+		int totalTime = (hour * 3600) + (minute * 60) + second;
+		String newFormat = "";
+		
+		if (totalTime < 3600) {
+			if (format.equals("[hour]:[minute]:[second]")) {
+				newFormat = format.substring("[hour]:".length());
+			} else if (format.equals("[hour] hour(s), [minute] minute(s), [second] second(s)")) {
+				newFormat = format.substring("[hour] hour(s), ".length());
+			}
+		}
+		
+		System.out.println("New Format " + newFormat);
+		
 	}
 	
 	public static String setBlank(String tag, String format) {
