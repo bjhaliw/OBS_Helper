@@ -58,13 +58,13 @@ public class ReadAndWrite {
 			format = "[hour]:[minute]:[second]";
 		}
 
-		String newFormat = new String(format);
+		String newFormat = format;
 
 		if (totalTime < 3600) {
 			if (format.equals("[hour]:[minute]:[second]")) {
-				newFormat = format.substring("[hour]:".length());
+				newFormat = newFormat.substring("[hour]:".length());
 			} else if (format.equals("[hour] hour(s), [minute] minute(s), [second] second(s)")) {
-				newFormat = format.substring("[hour] hour(s), ".length());
+				newFormat = newFormat.substring("[hour] hour(s), ".length());
 			}
 		}
 
@@ -150,17 +150,57 @@ public class ReadAndWrite {
 		return string;
 	}
 	
-	public static void writeToFile(String hour, String minute, String second, ComboBox<String> combo, CheckBox cb) {
-		String format = combo.getValue();
-		hour = ReadAndWrite.removeLeadingZeroes(hour);
+
+	/**
+	 * Starts the process of writing to the required filepath
+	 * @param filepath
+	 * @param hour
+	 * @param minute
+	 * @param second
+	 * @param format
+	 * @param removeUnused
+	 * @return
+	 */
+	public static String writeToFile(String filepath, String hour, String minute, String second, String format, boolean removeUnused) {
 		
-		if (cb.isSelected()) {
+		int totalTime = getTimeSeconds(hour, minute, second);
+		
+		// If the time is less than 10 hours
+		if (totalTime < 36000) {
+			hour = ReadAndWrite.removeLeadingZeroes(hour);
+		}
+		
+		// If the time is less than 10 minutes
+		if (totalTime < 600) {
+			minute = ReadAndWrite.removeLeadingZeroes(minute);
+		}
+		
+		// If the time is less than 10 seconds
+		if (totalTime < 10) {
+			second = ReadAndWrite.removeLeadingZeroes(second);
+		}
+		
+		
+		if (removeUnused) {
 			format = ReadAndWrite.removeUnusedTimeValues(hour, minute, second, format);
 		}
 		
+		
 		format = ReadAndWrite.replaceTimeFormattedString(hour, minute, second, format);
 		
-		System.out.println(format);
+		
+		
+		return format;
+	}
+	
+	private static int getTimeSeconds(String h, String m, String s) {
+		int hour = Integer.parseInt(h);
+		int minute = Integer.parseInt(m);
+		int second = Integer.parseInt(s);
+
+		int totalTime = (hour * 3600) + (minute * 60) + second;
+		
+		return totalTime;
 	}
 
 }

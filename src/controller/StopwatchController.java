@@ -151,5 +151,9 @@ public class StopwatchController  {
 	public boolean getIsRunning() {
 		return this.isRunning;
 	}
+	
+	public String getFilePath() {
+		return this.filePath;
+	}
 
 }

@@ -188,18 +188,17 @@ public class TimeTab {
 		Button reset = new Button("Reset");
 		reset.setOnAction(e -> {
 			this.stopwatchController.resetStopwatch();
-			try {			
-				
-				ReadAndWrite.writeToFile(this.stopwatchHoursField.getText(), this.stopwatchMinutesField.getText(), this.stopwatchSecondsField.getText(), combo, cb);
+			this.stopwatchHoursField.setText("00");
+			this.stopwatchMinutesField.setText("00");
+			this.stopwatchSecondsField.setText("00");
+			try {						
+				ReadAndWrite.writeToFile(this.stopwatchController.getFilePath(), stopwatchHoursField.getText(), this.stopwatchMinutesField.getText(), this.stopwatchSecondsField.getText(), combo.getValue(), cb.isSelected());
 				
 				this.stopwatchController.writeToFile("00", "00", "00");
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			this.stopwatchHoursField.setText("00");
-			this.stopwatchMinutesField.setText("00");
-			this.stopwatchSecondsField.setText("00");
 		});
 
 		buttonsBox.getChildren().addAll(start, pause, reset);
