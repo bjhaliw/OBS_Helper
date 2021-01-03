@@ -657,7 +657,7 @@ public class TimeTab {
 		ObservableList<String> list = FXCollections.observableArrayList();
 
 		list.add("[hour]:[minute]:[second]");
-		list.add("[hour] hour(s), [minute] minute(s), [second] second(s)");
+		list.add("[hour] hours, [minute] minutes, [second] seconds");
 
 		return list;
 

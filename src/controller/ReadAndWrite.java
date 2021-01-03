@@ -63,16 +63,16 @@ public class ReadAndWrite {
 		if (totalTime < 3600) {
 			if (format.equals("[hour]:[minute]:[second]")) {
 				newFormat = newFormat.substring("[hour]:".length());
-			} else if (format.equals("[hour] hour(s), [minute] minute(s), [second] second(s)")) {
-				newFormat = newFormat.substring("[hour] hour(s), ".length());
+			} else if (format.equals("[hour] hours, [minute] minutes, [second] seconds")) {
+				newFormat = newFormat.substring("[hour] hours, ".length());
 			}
 		}
 
 		if (totalTime < 60) {
 			if (format.equals("[hour]:[minute]:[second]")) {
 				newFormat = newFormat.substring("[minute]:".length());
-			} else if (format.equals("[hour] hour(s), [minute] minute(s), [second] second(s)")) {
-				newFormat = newFormat.substring("[minute] minute(s), ".length());
+			} else if (format.equals("[hour] hours, [minute] minutes, [second] seconds")) {
+				newFormat = newFormat.substring("[minute] minutes, ".length());
 			}
 		}
 
@@ -162,27 +162,47 @@ public class ReadAndWrite {
 	 * @return
 	 */
 	public static String writeToFile(String filepath, String hour, String minute, String second, String format, boolean removeUnused) {
-		
-		int totalTime = getTimeSeconds(hour, minute, second);
-		
-		// If the time is less than 10 hours
-		if (totalTime < 36000) {
+				
+		if (format.equals("[hour] hours, [minute] minutes, [second] seconds")) {
 			hour = ReadAndWrite.removeLeadingZeroes(hour);
-		}
-		
-		// If the time is less than 10 minutes
-		if (totalTime < 600) {
 			minute = ReadAndWrite.removeLeadingZeroes(minute);
-		}
-		
-		// If the time is less than 10 seconds
-		if (totalTime < 10) {
-			second = ReadAndWrite.removeLeadingZeroes(second);
-		}
-		
+			second = ReadAndWrite.removeLeadingZeroes(second);	
+			
+		} else {
+			int totalTime = getTimeSeconds(hour, minute, second);
+			
+			// If the time is less than 10 hours
+			if (totalTime < 36000) {
+				hour = ReadAndWrite.removeLeadingZeroes(hour);
+			}
+			
+			// If the time is less than 10 minutes
+			if (totalTime < 600) {
+				minute = ReadAndWrite.removeLeadingZeroes(minute);
+			}
+			
+			// If the time is less than 10 seconds
+			if (totalTime < 10) {
+				second = ReadAndWrite.removeLeadingZeroes(second);
+			}
+		}		
 		
 		if (removeUnused) {
 			format = ReadAndWrite.removeUnusedTimeValues(hour, minute, second, format);
+		}
+		
+		System.out.println("Current format is: " + format);
+		
+		if (hour.equals("1")) {
+			format = format.replace("hours", "hour");
+		}
+		
+		if (minute.equals("1")) {
+			format = format.replace("minutes", "minute");
+		}
+		
+		if (second.equals("1")) {
+			format = format.replace("seconds", "second");
 		}
 		
 		
