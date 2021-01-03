@@ -24,17 +24,19 @@ public class ReadAndWrite {
 	 * @param filePath - Location where text should be written
 	 * @param input    - string to be written to the file
 	 */
-	public static void writeToFileTimeValue(String filePath, String input) {
-		try {
-			PrintWriter writer = new PrintWriter(filePath);
-			writer.println(input);
-			System.out.println("Writing " + input + " to " + filePath);
-			writer.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	private static void writeToFileTimeValue(String filePath, String input) {
+		
+		if (filePath != null && input != null) {
+			try {
+				PrintWriter writer = new PrintWriter(filePath);
+				writer.println(input);
+				System.out.println("Writing " + input + " to " + filePath);
+				writer.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}	
 	}
 
 	/**
@@ -47,7 +49,7 @@ public class ReadAndWrite {
 	 * @param format - String of the desired format
 	 * @return - A new formatted string without the unused time values
 	 */
-	public static String removeUnusedTimeValues(String h, String m, String s, String format) {
+	private static String removeUnusedTimeValues(String h, String m, String s, String format) {
 		int hour = Integer.parseInt(h);
 		int minute = Integer.parseInt(m);
 		int second = Integer.parseInt(s);
@@ -92,12 +94,7 @@ public class ReadAndWrite {
 	 * @param format - String with tags to be replaced by values
 	 * @return - a String with the tags replaced by the time values
 	 */
-	public static String replaceTimeFormattedString(String h, String m, String s, String format) {
-
-		if (format == null || format.equals("")) {
-			format = "[hour]:[minute]:[second]";
-		}
-
+	private static String replaceTimeFormattedString(String h, String m, String s, String format) {
 		String output = new String(format);
 
 		if (output.contains("[hour]")) {
@@ -162,7 +159,11 @@ public class ReadAndWrite {
 	 * @return
 	 */
 	public static String writeToFile(String filepath, String hour, String minute, String second, String format, boolean removeUnused) {
-				
+		if (format == null || format.equals("")) {
+			format = "[hour]:[minute]:[second]";
+		}
+		
+		
 		if (format.equals("[hour] hours, [minute] minutes, [second] seconds")) {
 			hour = ReadAndWrite.removeLeadingZeroes(hour);
 			minute = ReadAndWrite.removeLeadingZeroes(minute);
@@ -177,12 +178,12 @@ public class ReadAndWrite {
 			}
 			
 			// If the time is less than 10 minutes
-			if (totalTime < 600) {
+			if (totalTime < 600 && removeUnused) {
 				minute = ReadAndWrite.removeLeadingZeroes(minute);
 			}
 			
 			// If the time is less than 10 seconds
-			if (totalTime < 10) {
+			if (totalTime < 10 && removeUnused) {
 				second = ReadAndWrite.removeLeadingZeroes(second);
 			}
 		}		
@@ -208,7 +209,7 @@ public class ReadAndWrite {
 		
 		format = ReadAndWrite.replaceTimeFormattedString(hour, minute, second, format);
 		
-		
+		writeToFileTimeValue(filepath, format);
 		
 		return format;
 	}

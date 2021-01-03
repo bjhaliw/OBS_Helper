@@ -85,7 +85,7 @@ public class CountdownController {
 	 * to false
 	 * 
 	 */
-	public synchronized void runTimer() {
+	public synchronized void runTimer(String format, boolean removeUnused) {
 		int delay = 1000;
 		int period = 1000;
 
@@ -127,7 +127,7 @@ public class CountdownController {
 							secondsField.setText(s);
 						});
 
-						writeToFile(h, m, s);
+						ReadAndWrite.writeToFile(filePath, h, m, s, format, removeUnused);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -137,14 +137,6 @@ public class CountdownController {
 
 		}
 	}
-
-	public void writeToFile(String h, String m, String s) throws FileNotFoundException {
-		// Writing to timer.txt file
-		PrintWriter writer = new PrintWriter(filePath);
-		writer.println(h + ":" + m + ":" + s);
-		writer.close();
-	}
-
 
 	/**
 	 * Helper method ran inside of the runTimer method. Decrements time by one
@@ -156,7 +148,6 @@ public class CountdownController {
 	private final int setInterval() throws FileNotFoundException {
 		// Check if at the end of the time
 		if (this.interval == 1) {
-			writeToFile("00", "00", "00");
 			cancelCountdown();
 		}
 		return --this.interval;
@@ -186,6 +177,10 @@ public class CountdownController {
 		seconds += (minutes * 60) + (hours * 3600);
 		this.interval = seconds;
 		timer = new Timer();
+	}
+	
+	public String getFilePath() {
+		return this.filePath;
 	}
 
 }

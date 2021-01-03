@@ -92,4 +92,28 @@ public class TimeTests {
 		
 		assertTrue(result.equals(correctResult));
 	}
+	
+	@Test
+	public void testTimeSingleValuesClockFormat() {
+		String h = "00", m = "05", s = "05";
+		
+		String result = ReadAndWrite.writeToFile(null, h, m, s, format[0], false);
+		String correctResult = "0:05:05";
+		
+		System.out.println(result);
+		
+		assertTrue(result.equals(correctResult));
+	}
+	
+	@Test
+	public void testTimeZeroValuesClockFormat() {
+		String h = "00", m = "00", s = "00";
+		
+		String result = ReadAndWrite.writeToFile(null, h, m, s, format[0], false);
+		String correctResult = "0:00:00";
+		
+		System.out.println(result);
+		
+		assertTrue(result.equals(correctResult));
+	}
 }

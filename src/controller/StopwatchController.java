@@ -54,7 +54,7 @@ public class StopwatchController  {
 	/**
 	 * Creates a new Timer and runs the new thread.
 	 */
-	public void startStopwatch() {
+	public void startStopwatch(String format, boolean removeUnused) {
 		int delay = 1000;
 		int period = 1000;
 		
@@ -64,59 +64,40 @@ public class StopwatchController  {
 
 			public void run() {
 
-				try {
-					// System.out.println(isRunning);
-					int hours = 0, minutes = 0, seconds = 0, time = 0;
-					time = ++interval;
+				// System.out.println(isRunning);
+				int hours = 0, minutes = 0, seconds = 0, time = 0;
+				time = ++interval;
 
-					System.out.println("Time:" + time);
+				System.out.println("Time:" + time);
 
-					// Updating amount of hours left
-					hours = time / 3600;
-					time -= (hours * 3600);
+				// Updating amount of hours left
+				hours = time / 3600;
+				time -= (hours * 3600);
 
-					// Updating amount of minutes left
-					minutes = time / 60;
-					time -= (minutes * 60);
+				// Updating amount of minutes left
+				minutes = time / 60;
+				time -= (minutes * 60);
 
-					// Updating amount of seconds left
-					seconds = time;
+				// Updating amount of seconds left
+				seconds = time;
 
-					// Getting String representations of the current
-					// hours, minutes, and seconds
-					String h = ReadAndWrite.formatIntToString(hours);
-					String m = ReadAndWrite.formatIntToString(minutes);
-					String s = ReadAndWrite.formatIntToString(seconds);
+				// Getting String representations of the current
+				// hours, minutes, and seconds
+				String h = ReadAndWrite.formatIntToString(hours);
+				String m = ReadAndWrite.formatIntToString(minutes);
+				String s = ReadAndWrite.formatIntToString(seconds);
 
-					// Writes to the applicable TextFields
-					Platform.runLater(() -> {
-						hoursField.setText(h);
-						minutesField.setText(m);
-						secondsField.setText(s);
-					});
+				// Writes to the applicable TextFields
+				Platform.runLater(() -> {
+					hoursField.setText(h);
+					minutesField.setText(m);
+					secondsField.setText(s);
+				});
 
-					// Writing to the stopwatch.txt file
-					writeToFile(h, m, s);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// Writing to the stopwatch.txt file
+				ReadAndWrite.writeToFile(filePath, h, m, s, format, removeUnused);
 			}
 		}, delay, period);
-	}
-	
-	/**
-	 * Writes the hours, minutes, and seconds to the file 
-	 * @param h - Hours
-	 * @param m - Minutes
-	 * @param s - Seconds
-	 * @throws FileNotFoundException
-	 */
-	public void writeToFile(String h, String m, String s) throws FileNotFoundException {
-		// Writing to timer.txt file
-		PrintWriter writer = new PrintWriter(filePath);
-		writer.println(h + ":" + m + ":" + s);
-		writer.close();
 	}
 	
 	/**
