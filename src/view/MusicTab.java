@@ -297,5 +297,9 @@ public class MusicTab {
 
 		stage.show();
 	}
+	
+	public SongController getSongController() {
+		return this.songController;
+	}
 
 }

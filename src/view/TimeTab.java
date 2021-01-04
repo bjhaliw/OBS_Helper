@@ -473,6 +473,14 @@ public class TimeTab {
 		}
 
 	}
+	
+	public CountdownController getCountdownController() {
+		return this.countdownController;
+	}
+	
+	public StopwatchController getStopwatchController() {
+		return this.stopwatchController;
+	}
 
 	private ObservableList<String> createFormatList() {
 		ObservableList<String> list = FXCollections.observableArrayList();

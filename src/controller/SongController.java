@@ -285,5 +285,9 @@ public class SongController {
 	public boolean getIsRunning() {
 		return this.isRunning;
 	}
+	
+	public String getDirectoryPath() {
+		return this.directoryPath;
+	}
 
 }

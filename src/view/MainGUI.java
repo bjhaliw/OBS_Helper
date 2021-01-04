@@ -1,10 +1,13 @@
 package view;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
+
+import controller.ReadAndWrite;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -61,7 +64,22 @@ public class MainGUI extends Application {
 		this.window.show();
 
 		// User closes main window
-		this.window.setOnCloseRequest(e -> System.exit(0));
+		this.window.setOnCloseRequest(e -> closeProgram());
+	}
+	
+	public void closeProgram() {
+		try {
+			ReadAndWrite.writeToFile(this.timeTab.getCountdownController().getFilePath(), "00", "00", "00",
+					null, true);
+			ReadAndWrite.writeToFile(this.timeTab.getStopwatchController().getFilePath(), "00", "00", "00",
+					null, true);
+			this.musicTab.getSongController().writeToFile("");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.exit(0);
 	}
 
 	/**
