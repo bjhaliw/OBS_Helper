@@ -1,11 +1,5 @@
 package view;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Optional;
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
@@ -30,7 +24,7 @@ public class HelpMenu {
 		return tabPane;
 	}
 
-	public Tab createWelcomeTab() {
+	private Tab createWelcomeTab() {
 		Tab tab = new Tab("Welcome");
 
 		
@@ -50,34 +44,41 @@ public class HelpMenu {
 		return tab;
 	}
 
-	public Tab createFirstTimeTab() {
+	private Tab createFirstTimeTab() {
 		Tab tab = new Tab("First Time Use");
+		
+		VBox box = new VBox(10);
+		box.setAlignment(Pos.CENTER);
+		Label title = new Label("First Time Use");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		title.setStyle("-fx-underline: true ;");
+		
+		Label msg = new Label("To start using the tool, ensure that you have set \nup your VLC Media Player to connect to the Internet.\n"
+				+ "This can be done by: \nTools>Preferences>Show Settings All (bottom left)>Main Interfaces>Select \"Web\">Lua>Enter a password ");
+		
+		box.getChildren().addAll(title, msg);
+		
+		tab.setContent(box);
 
 		return tab;
 	}
 
-	public Tab createCountdownTab() {
+	private Tab createCountdownTab() {
 		Tab tab = new Tab("Countdown");
 
 		return tab;
 	}
 
-	public Tab createStopwatchTab() {
+	private Tab createStopwatchTab() {
 		Tab tab = new Tab("Stopwatch");
 
 		return tab;
 	}
 
-	public Tab createMusicTab() {
+	private Tab createMusicTab() {
 		Tab tab = new Tab("Music");
 
 		return tab;
-	}
-
-	public Tab createCountdownTabHelp() {
-		Tab countdown = new Tab("Countdown");
-
-		return countdown;
 	}
 
 }

@@ -69,9 +69,9 @@ public class MainGUI extends Application {
 	
 	public void closeProgram() {
 		try {
-			ReadAndWrite.writeToFile(this.timeTab.getCountdownController().getFilePath(), "00", "00", "00",
+			ReadAndWrite.writeTimeToFile(this.timeTab.getCountdownController().getFilePath(), "00", "00", "00",
 					null, true);
-			ReadAndWrite.writeToFile(this.timeTab.getStopwatchController().getFilePath(), "00", "00", "00",
+			ReadAndWrite.writeTimeToFile(this.timeTab.getStopwatchController().getFilePath(), "00", "00", "00",
 					null, true);
 			this.musicTab.getSongController().writeToFile("");
 		} catch (FileNotFoundException e) {

@@ -3,7 +3,6 @@ package controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.scene.control.*;
@@ -127,7 +126,7 @@ public class CountdownController {
 							secondsField.setText(s);
 						});
 
-						ReadAndWrite.writeToFile(filePath, h, m, s, format, removeUnused);
+						ReadAndWrite.writeTimeToFile(filePath, h, m, s, format, removeUnused);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -178,7 +177,7 @@ public class CountdownController {
 		this.interval = seconds;
 		timer = new Timer();
 	}
-	
+
 	public String getFilePath() {
 		return this.filePath;
 	}

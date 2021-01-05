@@ -3,9 +3,6 @@ package controller;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-
 /**
  * This class is responsible for the creation, reading, and writing of the text
  * files that will be used for the overlay in OBS software. The class also
@@ -15,8 +12,73 @@ import javafx.scene.control.ComboBox;
  * @author Brenton Haliw
  *
  */
-@SuppressWarnings("restriction")
 public class ReadAndWrite {
+
+	/**
+	 * Starts the process of writing to the required filepath
+	 * 
+	 * @param filepath     - Location of the text file
+	 * @param hour         - Hour time value
+	 * @param minute       - Minute time value
+	 * @param second       - Second time value
+	 * @param format       - How the text should be displayed
+	 * @param removeUnused - Remove time values if they are 0
+	 * @return - String representing the text to be displayed
+	 */
+	public static String writeTimeToFile(String filepath, String hour, String minute, String second, String format,
+			boolean removeUnused) {
+		if (format == null || format.equals("")) {
+			format = "[hour]:[minute]:[second]";
+		}
+
+		if (format.equals("[hour] hours, [minute] minutes, [second] seconds")) {
+			hour = ReadAndWrite.removeLeadingZeroes(hour);
+			minute = ReadAndWrite.removeLeadingZeroes(minute);
+			second = ReadAndWrite.removeLeadingZeroes(second);
+
+		} else {
+			int totalTime = getTimeSeconds(hour, minute, second);
+
+			// If the time is less than 10 hours
+			if (totalTime < 36000) {
+				hour = ReadAndWrite.removeLeadingZeroes(hour);
+			}
+
+			// If the time is less than 10 minutes
+			if (totalTime < 600 && removeUnused) {
+				minute = ReadAndWrite.removeLeadingZeroes(minute);
+			}
+
+			// If the time is less than 10 seconds
+			if (totalTime < 10 && removeUnused) {
+				second = ReadAndWrite.removeLeadingZeroes(second);
+			}
+		}
+
+		if (removeUnused) {
+			format = ReadAndWrite.removeUnusedTimeValues(hour, minute, second, format);
+		}
+
+		System.out.println("Current format is: " + format);
+
+		if (hour.equals("1")) {
+			format = format.replace("hours", "hour");
+		}
+
+		if (minute.equals("1")) {
+			format = format.replace("minutes", "minute");
+		}
+
+		if (second.equals("1")) {
+			format = format.replace("seconds", "second");
+		}
+
+		format = ReadAndWrite.replaceTimeFormattedString(hour, minute, second, format);
+
+		writeTimeToFileAux(filepath, format);
+
+		return format;
+	}
 
 	/**
 	 * Writes the required input to the designated file
@@ -24,8 +86,8 @@ public class ReadAndWrite {
 	 * @param filePath - Location where text should be written
 	 * @param input    - string to be written to the file
 	 */
-	private static void writeToFileTimeValue(String filePath, String input) {
-		
+	private static void writeTimeToFileAux(String filePath, String input) {
+
 		if (filePath != null && input != null) {
 			try {
 				PrintWriter writer = new PrintWriter(filePath);
@@ -36,7 +98,7 @@ public class ReadAndWrite {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}	
+		}
 	}
 
 	/**
@@ -146,81 +208,22 @@ public class ReadAndWrite {
 
 		return string;
 	}
-	
 
 	/**
-	 * Starts the process of writing to the required filepath
-	 * @param filepath
-	 * @param hour
-	 * @param minute
-	 * @param second
-	 * @param format
-	 * @param removeUnused
-	 * @return
+	 * Helper method to calculate the time in seconds
+	 * 
+	 * @param h - Hour time value
+	 * @param m - Minute time value
+	 * @param s - Second time value
+	 * @return - Primitive integer representing number of seconds
 	 */
-	public static String writeToFile(String filepath, String hour, String minute, String second, String format, boolean removeUnused) {
-		if (format == null || format.equals("")) {
-			format = "[hour]:[minute]:[second]";
-		}
-		
-		
-		if (format.equals("[hour] hours, [minute] minutes, [second] seconds")) {
-			hour = ReadAndWrite.removeLeadingZeroes(hour);
-			minute = ReadAndWrite.removeLeadingZeroes(minute);
-			second = ReadAndWrite.removeLeadingZeroes(second);	
-			
-		} else {
-			int totalTime = getTimeSeconds(hour, minute, second);
-			
-			// If the time is less than 10 hours
-			if (totalTime < 36000) {
-				hour = ReadAndWrite.removeLeadingZeroes(hour);
-			}
-			
-			// If the time is less than 10 minutes
-			if (totalTime < 600 && removeUnused) {
-				minute = ReadAndWrite.removeLeadingZeroes(minute);
-			}
-			
-			// If the time is less than 10 seconds
-			if (totalTime < 10 && removeUnused) {
-				second = ReadAndWrite.removeLeadingZeroes(second);
-			}
-		}		
-		
-		if (removeUnused) {
-			format = ReadAndWrite.removeUnusedTimeValues(hour, minute, second, format);
-		}
-		
-		System.out.println("Current format is: " + format);
-		
-		if (hour.equals("1")) {
-			format = format.replace("hours", "hour");
-		}
-		
-		if (minute.equals("1")) {
-			format = format.replace("minutes", "minute");
-		}
-		
-		if (second.equals("1")) {
-			format = format.replace("seconds", "second");
-		}
-		
-		
-		format = ReadAndWrite.replaceTimeFormattedString(hour, minute, second, format);
-		
-		writeToFileTimeValue(filepath, format);
-		
-		return format;
-	}
-	
 	private static int getTimeSeconds(String h, String m, String s) {
 		int hour = Integer.parseInt(h);
 		int minute = Integer.parseInt(m);
 		int second = Integer.parseInt(s);
 
 		int totalTime = (hour * 3600) + (minute * 60) + second;
-		
+
 		return totalTime;
 	}
 

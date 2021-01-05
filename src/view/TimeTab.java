@@ -1,7 +1,5 @@
 package view;
 
-import java.io.FileNotFoundException;
-
 import controller.CountdownController;
 import controller.ReadAndWrite;
 import controller.StopwatchController;
@@ -18,11 +16,9 @@ import javafx.geometry.Insets;
 
 @SuppressWarnings("restriction")
 /**
- * Creates the CountdownTab GUI to be used in the OBS Helper program. The
- * countdown tab is responsible for allow the user to set a specified time
- * through the provided buttons or directly on the individual text fields. The
- * countdown tab coordinates with the TimerController class to write the current
- * countdown time to a text file to be read by OBS software.
+ * Creates a tab that is responsible for displaying the stopwatch and countdown
+ * portions of the OBS Helper program. The tab also allows the user to select
+ * how they want the text files to be formatted.
  * 
  * @author Brenton Haliw
  *
@@ -192,7 +188,7 @@ public class TimeTab {
 			this.stopwatchHoursField.setText("00");
 			this.stopwatchMinutesField.setText("00");
 			this.stopwatchSecondsField.setText("00");
-			ReadAndWrite.writeToFile(this.stopwatchController.getFilePath(), stopwatchHoursField.getText(),
+			ReadAndWrite.writeTimeToFile(this.stopwatchController.getFilePath(), stopwatchHoursField.getText(),
 					this.stopwatchMinutesField.getText(), this.stopwatchSecondsField.getText(),
 					stopwatchCombo.getValue(), stopwatchCB.isSelected());
 		});
@@ -374,7 +370,7 @@ public class TimeTab {
 		countdownStopButton.setTooltip(new Tooltip("Stop and Reset Countdown"));
 		countdownStopButton.setOnAction(e -> {
 			this.countdownController.cancelCountdown();
-			ReadAndWrite.writeToFile(this.countdownController.getFilePath(), "00", "00", "00", combo.getValue(),
+			ReadAndWrite.writeTimeToFile(this.countdownController.getFilePath(), "00", "00", "00", combo.getValue(),
 					cb.isSelected());
 
 			this.countdownHoursField.setText("00");
@@ -382,9 +378,6 @@ public class TimeTab {
 			this.countdownSecondsField.setText("00");
 		});
 
-		Label textFormat = new Label("Text File Format");
-		ComboBox<String> stopCombo = new ComboBox<>();
-		Button formatHelp = new Button("Format Help");
 
 		// Creating the GridPane for the +/- buttons to be added to
 		pane.add(hm5, 0, 0, 1, 1);
@@ -416,9 +409,6 @@ public class TimeTab {
 		// Centering the nodes within the gridpane and then giving them a drop shadow
 		for (int i = 0; i < pane.getChildren().size(); i++) {
 			GridPane.setHalignment(pane.getChildren().get(i), HPos.CENTER);
-			// pane.getChildren().get(i)
-			// .setStyle("-fx-effect: dropshadow(three-pass-box, rgba(135, 206, 250, 0.3),
-			// 10, 0, 0, 0);");
 		}
 
 		// Adding the GridPane to the HBox
@@ -430,8 +420,9 @@ public class TimeTab {
 	/**
 	 * Helper method so that way we don't repeat a ton of code for the +/- buttons.
 	 * 
-	 * @param value Primitive integer to be added/subtracted to the TextField value
-	 * @param -     textfield TextField object to be manipulated
+	 * @param value     - Primitive integer to be added/subtracted to the TextField
+	 *                  value
+	 * @param textfield - TextField object to be manipulated
 	 */
 	private final void handleIncDecButton(int value, TextField textfield) {
 		try {
@@ -463,7 +454,7 @@ public class TimeTab {
 						this.countdownController.runTimer(countdownCombo.getValue(), countdownCB.isSelected());
 					} else {
 						this.countdownController.cancelCountdown();
-						ReadAndWrite.writeToFile(this.countdownController.getFilePath(), "00", "00", "00",
+						ReadAndWrite.writeTimeToFile(this.countdownController.getFilePath(), "00", "00", "00",
 								countdownCombo.getValue(), countdownCB.isSelected());
 					}
 				}
@@ -473,15 +464,31 @@ public class TimeTab {
 		}
 
 	}
-	
+
+	/**
+	 * Getter method for the CountdownController
+	 * 
+	 * @return - CountdownController object
+	 */
 	public CountdownController getCountdownController() {
 		return this.countdownController;
 	}
-	
+
+	/**
+	 * Getter method for the StopwatchController
+	 * 
+	 * @return - StopwatchController method
+	 */
 	public StopwatchController getStopwatchController() {
 		return this.stopwatchController;
 	}
 
+	/**
+	 * Helper method to create the values to be displayed within the ComboBox. This
+	 * will allow the user to select how they want their text file to be displayed.
+	 * 
+	 * @return - ObservableList containing different types of String formats
+	 */
 	private ObservableList<String> createFormatList() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 
