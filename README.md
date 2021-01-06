@@ -7,11 +7,15 @@ Helper program for overlaying text on screen through OBS. Lets the user create a
 - Input hours, minutes, or seconds into applicable fields
 - Also use buttons to increment/decrement values by 1 or 5
 - Saves current countdown time to a textfile to be read by OBS
+  - Select from H:MM:SS or [hour] hours, [minute] minutes, [second] seconds
+  - Can toggle whether ot not unused time values will be omitted
 
 ### Stopwatch
 - Keep track of how long you have been streaming with this stopwatch
 - Displays to stopwatch.txt file for easy overlay through OBS
 - Pause the stopwatch keeping the current time, or reset it back to 0
+  - Select from H:MM:SS or [hour] hours, [minute] minutes, [second] seconds
+  - Can toggle whether ot not unused time values will be omitted
 
 ### VLC Song Selection
 
@@ -39,8 +43,6 @@ Helper program for overlaying text on screen through OBS. Lets the user create a
 - Overlay for music currently being played
   - Local files such as mp3 easily implemented, but harder for other
   - Want to get Spotify, YouTube, and other music streaming services
-
-- Custom formatting for the countdown and stopwatch text files
 
 - How to Use tutorial menu
 
