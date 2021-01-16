@@ -53,9 +53,10 @@ public class HelpMenu {
 		title.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		title.setStyle("-fx-underline: true ;");
 		
-		Label msg = new Label("To start using the tool, ensure that you have set \nup your VLC Media Player to connect to the Internet.\n"
-				+ "This can be done by: \nTools>Preferences>Show Settings All (bottom left)>Main Interfaces>Select \"Web\">Lua>Enter a password ");
+		Label msg = new Label("To start using the tool, ensure that you have set up your VLC Media Player to connect to the Internet.\n\n"
+				+ "This can be done by: \n\nTools>Preferences>Show Settings All (bottom left)\n>Main Interfaces>Select \"Web\">Lua>Enter a password ");
 		
+		msg.setWrapText(true);
 		box.getChildren().addAll(title, msg);
 		
 		tab.setContent(box);
@@ -65,7 +66,20 @@ public class HelpMenu {
 
 	private Tab createCountdownTab() {
 		Tab tab = new Tab("Countdown");
-
+		VBox box = new VBox(10);
+		
+		box.setAlignment(Pos.CENTER);
+		Label title = new Label("Countdown Timer");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		title.setStyle("-fx-underline: true ;");
+		
+		Label msg = new Label("Enter in the desired time by using the provided buttons or by typing in the values in the required fields.\n"
+				+ "Then, select the desired format at the bottom of the screen. The format can be HH:MM:SS or in word form.");
+		
+		msg.setWrapText(true);
+		box.getChildren().addAll(title, msg);
+		
+		tab.setContent(box);
 		return tab;
 	}
 

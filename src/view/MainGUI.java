@@ -132,7 +132,7 @@ public class MainGUI extends Application {
 		});
 
 		exit.setOnAction(e -> {
-			System.exit(0);
+			closeProgram();
 		});
 
 		return menuBar;
